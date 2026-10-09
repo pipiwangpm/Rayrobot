@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f6f3" />
+  <meta name="description" content="棕榈果分拣上位机操作界面原型，包含实时总览、检测记录、异常复核、历史统计、报告中心与系统设置。" />
+  <title>棕榈果智能分拣 · 上位机原型</title>
+</head>
+<body>
+  <div id="root"></div>
+  <script src="./assets/react.production.min.js"></script>
+  <script src="./assets/react-dom.production.min.js"></script>
+  <script>
+    window.__AXHUB_DEFINE_COMPONENT__ = function (Component) {
+      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component));
+    };
+  </script>
+  <script src="./assets/palm-fruit-sorting.js"></script>
+</body>
+</html>
