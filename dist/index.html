@@ -1,21 +1,715 @@
 <!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#f5f6f3" />
-  <meta name="description" content="Palm fruit sorting control room prototype with live monitoring, detection records, exception review, historical statistics, reports and settings." />
-  <title>Palm Fruit Sorting · Control Room Prototype</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light">
+  <title>棕榈果分拣系统 · 页面评审版</title>
+  <style>
+    :root{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Microsoft YaHei",sans-serif;color:#202a24;background:#f5f7f4;font-synthesis:none;--ink:#202a24;--muted:#627168;--line:#dce4dc;--green:#285c42;--green-bg:#edf5ee;--amber:#9a621c;--surface:#fff;--shadow:0 8px 32px rgba(37,64,44,.045)}
+    *{box-sizing:border-box}body{margin:0}button,input,select{font:inherit}button{cursor:pointer}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid #91bba0;outline-offset:2px}button:disabled{cursor:not-allowed;opacity:.43}
+    .layout{display:grid;grid-template-columns:216px minmax(0,1fr);min-height:100vh}.sidebar{background:#fff;border-right:1px solid var(--line);padding:29px 17px}.brand{font-size:15px;font-weight:800;color:#294a35;padding:0 13px 32px;line-height:1.5}.nav-parent{font-size:13px;font-weight:800;color:#526758;padding:12px 13px}.nav-item{display:block;width:100%;text-align:left;border:0;background:transparent;border-radius:8px;padding:12px 13px 12px 25px;margin:2px 0;color:#536559;font-size:14px}.nav-item.active{background:var(--green-bg);color:var(--green);font-weight:800}.nav-item:hover:not(.active){background:#f5f8f5}
+    .shell{min-width:0;max-width:1800px;width:100%;margin:0 auto;padding:30px 32px 60px}.masthead{display:flex;justify-content:space-between;gap:20px;align-items:flex-start;margin-bottom:24px}.eyebrow{font-size:12px;font-weight:700;color:#5d7c67}.masthead h1{font-size:29px;line-height:1.2;margin:7px 0 0}.language-switch{display:inline-flex;align-items:center;gap:3px;padding:3px;border:1px solid #dce6dd;border-radius:8px;background:#fff;white-space:nowrap;flex:none}.language-switch button{border:0;border-radius:5px;background:transparent;color:#6d7e71;padding:7px 10px;font-size:12px;font-weight:700}.language-switch button.active{background:#eaf4ec;color:#285c42}.language-switch button:hover:not(.active){background:#f5f8f5}
+    .surface{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}.filter-panel{padding:21px 24px;margin-bottom:20px}.section-kicker{font-size:14px;font-weight:700;margin:0 0 17px}.filter-layout{display:flex;gap:18px;align-items:end;flex-wrap:wrap}.filter-block{min-width:0}.grain-block{width:155px;flex:0 0 155px}.time-block{min-width:430px;flex:1}.field-label{display:block;color:#4f6054;font-size:12px;font-weight:700;margin-bottom:8px}.grain-select,.date-range input,.batch-search input{height:40px;background:#fff;border:1px solid #cfd9d0;border-radius:8px;padding:0 10px;color:var(--ink);font-size:13px}.grain-select{width:100%;appearance:none;-webkit-appearance:none;padding-right:42px;background-image:url("data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 width=%2712%27 height=%278%27 viewBox=%270 0 12 8%27%3E%3Cpath d=%27M1 1.5 6 6.5 11 1.5%27 fill=%27none%27 stroke=%27%2353665a%27 stroke-width=%271.6%27 stroke-linecap=%27round%27 stroke-linejoin=%27round%27/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 18px center;background-size:12px 8px}.date-range{display:flex;align-items:center;gap:9px}.date-range input{width:calc(50% - 13px);min-width:0}.range-divider{color:#8e9b91;font-size:13px}.action-row{display:flex;align-items:center;gap:8px}.primary,.secondary{height:40px;border-radius:8px;font-size:13px;white-space:nowrap}.primary{padding:0 20px;border:1px solid var(--green);background:var(--green);color:#fff;font-weight:700}.primary:hover{background:#1f4e37}.secondary{padding:0 14px;border:1px solid #d4ded5;background:#fff;color:#4b5d50}.secondary:hover{background:#f4f8f4}.error{display:none;margin:12px 0 0;color:#a84432;font-size:12px}.error.visible{display:block}
+    .content-panel{overflow:hidden}.table-toolbar{min-height:66px;padding:12px 22px;display:flex;align-items:center;justify-content:flex-end;gap:12px}.shift-schedule{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-right:auto;color:#68786c;font-size:12px}.shift-schedule b{color:#3f5d49;font-weight:700}.batch-search{display:flex;align-items:center;gap:8px;margin-right:auto}.batch-search input{width:220px}.export{display:inline-flex;align-items:center;gap:8px}.export svg{width:15px;height:15px}.table-scroll{overflow-x:auto;max-width:100%;padding:0 22px}.data-table{border-collapse:separate;border-spacing:0;width:100%;text-align:left}.period-table{min-width:1370px}.batch-table{min-width:1760px}.data-table th{font-size:12px;font-weight:700;color:#53665a;background:#f7f9f6;border-top:1px solid #e4ebe4;border-bottom:1px solid #e4ebe4;padding:12px 11px;white-space:nowrap}.data-table thead tr:first-child th{text-align:center}.data-table thead tr:first-child th:first-child,.data-table thead tr:first-child th:nth-child(2),.data-table thead tr:first-child th:nth-child(3){text-align:left}.data-table th.group-a{background:#f0f6f0}.data-table th.group-b{background:#fbf5eb;color:#8d5a1c}.data-table th.group-c{background:#f1f6f2}.data-table td{padding:13px 11px;border-bottom:1px solid #e9eee9;font-size:13px;color:#415046;vertical-align:middle;background:#fff}.data-table tr.data-row:hover td{background:#fbfcfa}.data-table .main-value{font-size:14px;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums}.data-table .period-label{display:flex;align-items:center;gap:7px;min-width:195px}.batch-id{white-space:nowrap}.numeric{font-variant-numeric:tabular-nums;white-space:nowrap}.metric{font-variant-numeric:tabular-nums;min-width:92px}.metric strong{display:block;font-size:14px;color:#2d3a31}.metric small{display:block;font-size:11px;color:#829087;margin-top:3px}.metric.b-zone strong{color:var(--amber)}.muted-value{color:#87948a}.partial{font-size:10px;font-weight:600;color:#856c40;background:#fff5e6;border-radius:5px;padding:3px 5px;white-space:nowrap}.state-pill{display:inline-flex;align-items:center;gap:5px;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700;white-space:nowrap}.state-pill:before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}.state-pill.running{color:#37734d;background:#edf7ee}.state-pill.done{color:#65756a;background:#f0f3ef}.sticky-col{position:sticky;left:0;z-index:2;box-shadow:2px 0 0 #e6ece6}.data-table thead .sticky-col{z-index:3}.data-table tr.data-row:hover .sticky-col{background:#fbfcfa}.pagination{display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 22px;padding:18px 0 21px;color:#75847a;font-size:12px}.pager{display:flex;align-items:center;gap:7px}.pagination button{height:32px;padding:0 11px;border:1px solid #d6e0d7;border-radius:7px;background:#fff;color:#526555;font-size:12px}.pagination button:not(:disabled):hover{background:#f2f7f2}.empty-state{text-align:center;padding:64px 15px 68px;color:#819087}.empty-state strong{display:block;color:#47594d;font-size:16px;margin-bottom:9px}.empty-state span{font-size:13px}.toast{position:fixed;left:50%;bottom:30px;transform:translate(-50%,15px);opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;background:#243c2c;color:#fff;border-radius:9px;box-shadow:0 12px 34px #19342433;padding:12px 17px;font-size:13px;z-index:10}.toast.show{opacity:1;transform:translate(-50%,0)}
+    .nav-item.nav-top{padding-left:13px;margin-top:12px}.record-filter-grid{display:grid;grid-template-columns:minmax(135px,1fr) minmax(145px,1fr) minmax(350px,2.3fr) minmax(135px,1fr) minmax(135px,1fr) auto;gap:14px;align-items:end}.record-field{min-width:0}.record-field input,.record-field select{width:100%;height:40px;border:1px solid #cfd9d0;border-radius:8px;background:#fff;color:var(--ink);padding:0 10px;font-size:13px}.record-field select{padding-right:26px}.record-time .date-range input{width:calc(50% - 13px)}.record-table{min-width:1010px}.record-table th{font-size:12px;text-align:left!important}.record-table td{height:54px}.record-table .sticky-col{min-width:190px}.record-table .batch-id{font-size:12px}.record-table .confidence{font-weight:700;color:#425a49}.record-table .status-pill,.detail-status{display:inline-block;border-radius:20px;padding:5px 9px;font-size:11px;font-weight:700;white-space:nowrap}.status-recognized{color:#42624b;background:#edf5ef}.status-pending{color:#94611e;background:#fff4e4}.status-reviewed{color:#32618a;background:#edf4fa}.status-failed{color:#9a514b;background:#faeeed}.detail-link{border:0;background:none;color:var(--green);font-size:13px;font-weight:700;padding:5px 0}.detail-link:hover{text-decoration:underline}.drawer-backdrop{position:fixed;inset:0;background:rgba(20,36,25,.38);z-index:20;display:flex;justify-content:flex-end}.drawer{width:min(600px,100vw);height:100%;background:#fff;box-shadow:-18px 0 50px rgba(17,36,20,.16);overflow-y:auto}.drawer-head{position:sticky;top:0;z-index:1;background:#fff;border-bottom:1px solid var(--line);padding:22px 26px;display:flex;align-items:flex-start;justify-content:space-between;gap:15px}.drawer-head h2{font-size:21px;margin:5px 0 0}.drawer-close{border:0;background:#f1f5f1;color:#45614e;border-radius:7px;width:34px;height:34px;font-size:22px;line-height:1}.drawer-content{padding:22px 26px 35px}.photo-frame{margin:0 0 24px;background:#f1f4f1;border:1px solid var(--line);border-radius:10px;overflow:hidden}.photo-frame img{display:block;width:100%;height:248px;object-fit:cover}.photo-frame figcaption{font-size:12px;color:#69786c;padding:10px 13px}.detail-section{padding:0 0 22px;margin-bottom:22px;border-bottom:1px solid #e9eee9}.detail-section:last-child{border-bottom:0}.detail-section h3{font-size:15px;margin:0 0 16px}.detail-grid{display:grid;grid-template-columns:1fr 1fr;gap:17px 22px}.detail-item dt{font-size:12px;color:#7c8b80;margin-bottom:6px}.detail-item dd{font-size:14px;font-weight:650;color:#26382d;margin:0;overflow-wrap:anywhere}.detail-item.wide{grid-column:1/-1}.review-flow{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:13px}.review-flow strong{color:#27563d}.review-flow .arrow{color:#9ba99d}.review-meta{color:#728075;font-size:12px;margin:13px 0 0}.detail-note{color:#718076;font-size:13px;line-height:1.6;margin:0}
+    .record-actions{display:flex;align-items:center;gap:15px;white-space:nowrap}.record-actions .review-link{color:#94611e}.review-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:15px}.review-heading h3{margin:0}.review-heading .secondary{height:34px}.review-entry{border-left:2px solid #cbdccf;padding:4px 0 4px 14px;margin:0 0 15px}.review-entry:last-child{margin-bottom:0}.review-entry .review-meta{margin-top:7px}.review-note{font-size:12px;color:#5a6c60;margin:8px 0 0;line-height:1.5}.review-form{background:#f7faf7;border:1px solid #e1e9e1;border-radius:9px;padding:16px;margin-bottom:18px}.review-form select,.review-form textarea{display:block;width:100%;border:1px solid #ccd9ce;border-radius:7px;background:#fff;color:var(--ink);font-size:13px;padding:9px 10px;margin-bottom:16px}.review-form select{height:39px}.review-form textarea{resize:vertical;min-height:76px}.review-form-actions{display:flex;gap:9px}.review-error{display:none;color:#a84432;font-size:12px;margin:-6px 0 12px}.review-error.visible{display:block}
+    .dashboard .masthead{margin-bottom:18px}.live-head{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:16px 20px;margin-bottom:18px}.live-main{display:flex;align-items:center;gap:13px;flex-wrap:wrap}.live-title{font-size:16px;font-weight:800}.live-sub,.live-time{font-size:12px;color:var(--muted)}.live-pill{display:inline-flex;align-items:center;gap:7px;background:#eaf5eb;color:#2f7047;border-radius:20px;padding:6px 10px;font-size:12px;font-weight:800}.live-pill:before{content:"";width:7px;height:7px;background:currentColor;border-radius:50%}.live-pill.stale{background:#fff0e8;color:#a04d26}.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px;margin-bottom:18px}.kpi{padding:20px 21px;min-height:130px;text-align:left}.kpi button{all:unset;cursor:pointer;display:block;width:100%}.kpi button:focus-visible{outline:3px solid #91bba0;border-radius:5px}.kpi-label{font-size:13px;color:#5f7164;font-weight:700}.kpi-value{display:block;margin:14px 0 8px;color:#20362a;font-size:32px;line-height:1;font-weight:800;font-variant-numeric:tabular-nums}.kpi-note{font-size:12px;color:#77877b}.kpi.warning .kpi-value{color:#a5611d}.kpi.error-kpi .kpi-value{color:#a24b43}.dashboard-main,.dashboard-bottom{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(340px,1fr);gap:18px;margin-bottom:18px}.dash-panel{padding:20px 22px;min-width:0}.dash-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}.dash-panel h2{font-size:17px;margin:0}.trend-tabs{display:flex;gap:5px;padding:3px;background:#f1f5f1;border-radius:8px}.trend-tabs button{border:0;border-radius:6px;background:none;padding:7px 12px;color:#66776a;font-size:12px}.trend-tabs button.active{background:#fff;color:var(--green);font-weight:800;box-shadow:0 1px 5px #183a2119}.trend-chart{height:244px;display:flex;align-items:flex-end;gap:7px;padding:12px 2px 0;border-bottom:1px solid #dde6dd}.trend-column{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;position:relative;align-items:center}.trend-bar{width:min(100%,35px);min-height:1px;display:flex;flex-direction:column-reverse;border-radius:4px 4px 0 0;overflow:hidden;background:#edf1ed}.trend-segment{width:100%;display:block}.trend-label{height:27px;padding-top:7px;font-size:10px;color:#7a897e;white-space:nowrap}.trend-column:hover .trend-tip,.trend-column:focus-within .trend-tip{display:block}.trend-tip{display:none;position:absolute;z-index:3;bottom:100%;left:50%;transform:translateX(-50%);min-width:140px;padding:8px 10px;background:#223d2d;color:#fff;border-radius:6px;font-size:11px;line-height:1.5;white-space:nowrap;box-shadow:0 8px 20px #142a1d30}.trend-legend{display:flex;flex-wrap:wrap;gap:9px 15px;margin-top:18px}.trend-legend span{display:inline-flex;align-items:center;gap:6px;color:#657568;font-size:11px}.trend-legend i{width:8px;height:8px;border-radius:2px;display:inline-block}.zone-line{display:flex;align-items:center;gap:11px;padding:13px 0;border-bottom:1px solid #edf0ed}.zone-line:first-of-type{padding-top:0}.zone-label{width:61px;flex:none;font-size:13px;font-weight:800}.zone-track{height:9px;background:#eff2ee;border-radius:10px;flex:1;overflow:hidden}.zone-track i{display:block;height:100%;border-radius:10px}.zone-figure{font-size:13px;font-weight:800;width:76px;text-align:right;font-variant-numeric:tabular-nums}.zone-figure small{display:block;font-size:11px;font-weight:500;color:#829087;margin-top:2px}.class-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 18px;margin-top:18px}.class-row{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:#637367}.class-row strong{color:#2a3e30;font-variant-numeric:tabular-nums;white-space:nowrap}.recent-list{display:grid}.recent-item{display:flex;align-items:center;gap:13px;width:100%;padding:10px 0;border:0;border-bottom:1px solid #edf0ed;background:none;text-align:left}.recent-item:last-child{border-bottom:0;padding-bottom:0}.recent-item:first-child{padding-top:0}.recent-item:hover{background:#fafcf9}.recent-item img{width:58px;height:48px;object-fit:cover;border-radius:5px;flex:none}.recent-info{min-width:0;flex:1}.recent-info strong{display:block;font-size:12px;color:#263a2d;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.recent-info span{display:block;font-size:11px;color:#738477;margin-top:4px}.recent-class{font-size:12px;color:#536a58;text-align:right;white-space:nowrap}.device-row{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #edf0ed;padding:14px 0;font-size:13px}.device-row:first-of-type{padding-top:2px}.device-row:last-of-type{border-bottom:0}.device-status{font-weight:800;color:#38794e}.device-status.offline{color:#a35440}.demo-caption{font-size:11px;color:#8a998d;margin-top:11px}
+    .device-action{display:flex;align-items:center;gap:12px}.device-link{border:0;background:none;color:var(--green);font-size:12px;font-weight:800;padding:5px 0}.device-link:hover{text-decoration:underline}.pause-button{height:30px;padding:0 11px;border:1px solid #d4a577;border-radius:6px;background:#fff8ef;color:#965b1f;font-size:12px;font-weight:800}.pause-button.resume{border-color:#a3c4aa;background:#f0f8f0;color:#2f7047}.live-pill.paused{background:#fff3df;color:#96601c}.camera-backdrop{position:fixed;inset:0;background:rgba(20,36,25,.55);z-index:20;display:flex;align-items:center;justify-content:center;padding:20px}.camera-dialog{width:min(880px,100%);background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 24px 60px #10201540}.camera-dialog-head{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line)}.camera-dialog-head h2{font-size:18px;margin:0}.camera-screen{position:relative;background:#151b17;min-height:320px;display:flex;align-items:center;justify-content:center}.camera-screen img{display:block;width:100%;max-height:520px;object-fit:contain}.camera-screen .camera-overlay{position:absolute;left:16px;top:16px;background:#1a2d22d9;color:#fff;border-radius:5px;padding:7px 10px;font-size:12px}.camera-offline{color:#d4ded5;font-size:16px}.camera-dialog-foot{padding:13px 22px;color:#67786b;font-size:12px}
+    .equipment-panel{display:flex;flex-direction:column}.equipment-panel .dash-panel-head{margin-bottom:14px}.equipment-preview{border:1px solid #e3eae3;border-radius:9px;overflow:hidden;background:#f8faf8}.equipment-preview-main{position:relative;display:block;width:100%;height:194px;padding:0;border:0;background:#e8eee8;text-align:left;overflow:hidden}.equipment-preview-main img{display:block;width:100%;height:100%;object-fit:cover;transition:transform .2s}.equipment-preview-main:hover img{transform:scale(1.025)}.equipment-preview-main .preview-badge{position:absolute;left:12px;top:12px;background:#183a2dd9;color:#fff;padding:5px 8px;border-radius:5px;font-size:11px;font-weight:700}.equipment-preview-main .preview-action{position:absolute;right:12px;bottom:12px;background:#fff;color:#285c42;padding:7px 10px;border-radius:6px;font-size:12px;font-weight:800;box-shadow:0 2px 9px #10281836}.equipment-preview-main .preview-offline{display:flex;align-items:center;justify-content:center;width:100%;height:100%;color:#829387;font-size:14px}.equipment-preview-caption{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:11px 13px;font-size:12px}.equipment-preview-caption strong{color:#243a2d;font-size:13px}.equipment-preview-caption .preview-status{color:#36804d;font-weight:800}.equipment-preview-caption .preview-status.offline{color:#a35440}.plc-control{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:13px;padding:15px 13px;border:1px solid #e3eae3;border-radius:9px;background:#f9fbf9}.plc-control-main strong{display:block;font-size:13px;color:#293c2e}.plc-control-main span{display:block;margin-top:4px;font-size:11px;color:#718275}.plc-control .pause-button{height:36px;padding:0 13px}.equipment-panel .demo-caption{margin-top:auto;padding-top:12px}
+    .report-filter{display:flex;align-items:end;gap:14px;flex-wrap:wrap}.report-filter input{height:40px;width:185px;border:1px solid #cfd9d0;border-radius:8px;background:#fff;color:var(--ink);padding:0 10px;font-size:13px}.report-intro{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:19px 23px;border-bottom:1px solid #e8eee8}.report-intro strong{display:block;font-size:15px}.report-intro span{display:block;margin-top:5px;color:#748478;font-size:12px}.report-table-wrap{overflow-x:auto;padding:0 22px}.report-table{width:100%;border-collapse:collapse;min-width:850px}.report-table th{padding:14px 11px;text-align:left;background:#f7f9f7;border-bottom:1px solid #e4ebe4;color:#607264;font-size:12px}.report-table td{padding:16px 11px;border-bottom:1px solid #ebf0eb;color:#344638;font-size:13px;vertical-align:middle}.report-table tr:last-child td{border-bottom:0}.report-table .report-date{font-weight:800;color:#273a2d}.report-table .report-sub{display:block;color:#829087;font-size:11px;margin-top:5px}.report-table .report-actions{display:flex;align-items:center;gap:13px;white-space:nowrap}.report-table .report-actions button,.report-version-toggle{border:0;background:none;color:var(--green);font-size:12px;font-weight:700;padding:4px 0}.report-table .report-actions button:hover,.report-version-toggle:hover{text-decoration:underline}.report-table .report-actions button.regenerate{color:#976024}.report-version-toggle{display:block;margin-top:5px;color:#697e6d}.report-history-row td{background:#f8faf8;padding:11px 11px 11px 28px}.report-version-badge{display:inline-block;padding:4px 8px;border-radius:6px;background:#e9f3eb;color:#2a6542;font-size:11px;font-weight:800}.report-version-badge.old{background:#f0f2ef;color:#6b7b6d}.report-demo-tag{font-size:11px;color:#839287}.report-modal-backdrop{position:fixed;inset:0;z-index:40;background:#172c1d99;display:flex;justify-content:center;align-items:flex-start;padding:22px;overflow-y:auto}.report-modal{width:min(980px,100%);background:#fff;border-radius:12px;box-shadow:0 22px 60px #10251840;overflow:hidden}.report-modal-head{display:flex;align-items:center;justify-content:space-between;gap:14px;background:#fff;border-bottom:1px solid #dce5dd;padding:15px 20px}.report-modal-head strong{font-size:16px}.report-modal-head span{display:block;color:#77877a;font-size:12px;margin-top:4px}.report-modal-actions{display:flex;align-items:center;gap:8px}.report-modal-scroll{max-height:calc(100vh - 110px);overflow:auto;padding:25px}.report-paper{width:min(790px,100%);margin:0 auto;background:#fff;box-shadow:0 9px 30px #17332215;padding:45px 48px 52px;color:#26392c}.report-paper-kicker{color:#66816b;font-size:11px;letter-spacing:.11em;font-weight:800}.report-paper h2{font-size:29px;margin:12px 0 8px}.report-paper .report-period{font-size:13px;color:#6f8073}.report-paper-meta{display:flex;justify-content:space-between;gap:12px;border-top:1px solid #dae4da;border-bottom:1px solid #dae4da;margin:26px 0;padding:13px 0;color:#5d705f;font-size:11px}.report-metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}.report-metric{padding:13px;border:1px solid #e2eae2;border-radius:7px;background:#f9fbf9}.report-metric span{display:block;font-size:11px;color:#708173}.report-metric strong{display:block;font-size:20px;margin-top:6px;color:#294e37}.report-paper h3{font-size:16px;margin:32px 0 13px;padding-bottom:7px;border-bottom:1px solid #dce5dc}.report-paper table{width:100%;border-collapse:collapse;font-size:11px}.report-paper th{background:#f3f7f3;color:#607363;font-weight:800;text-align:left;padding:9px 8px}.report-paper td{border-bottom:1px solid #e9efe9;padding:9px 8px}.report-paper td.num{text-align:right;font-variant-numeric:tabular-nums}.report-paper .report-chart{display:flex;align-items:flex-end;gap:5px;height:122px;border-bottom:1px solid #dce5dc;padding-top:5px}.report-paper .report-chart-col{flex:1;min-width:0;height:100%;display:flex;flex-direction:column;justify-content:flex-end;align-items:center}.report-paper .report-chart-bar{width:100%;max-width:22px;background:#4f9470;border-radius:2px 2px 0 0}.report-paper .report-chart-label{font-size:8px;color:#7b8b7d;height:18px;padding-top:3px}.report-paper .report-shifts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:15px 0}.report-paper .report-shifts div{border:1px solid #e3ebe3;border-radius:6px;padding:9px;font-size:11px}.report-paper .report-shifts strong{float:right;color:#2f6747}.report-paper .report-note{font-size:11px;color:#697b6c;line-height:1.5}.report-paper .report-footer{border-top:1px solid #dde7dd;margin-top:31px;padding-top:12px;color:#8a998c;font-size:10px}
+    @media print{@page{size:A4;margin:12mm}html,body,#app{background:#fff!important}.layout{display:block!important;min-height:0!important}.layout>aside,.layout>main,.toast{display:none!important}.report-modal-backdrop{position:static!important;display:block!important;padding:0!important;background:#fff!important;overflow:visible!important}.report-modal{width:100%!important;background:#fff!important;box-shadow:none!important;overflow:visible!important}.report-modal-head{display:none!important}.report-modal-scroll{max-height:none!important;overflow:visible!important;padding:0!important}.report-paper{width:100%!important;box-shadow:none!important;padding:0!important}.layout,.report-modal-backdrop,.report-modal,.report-modal-scroll,.report-paper{background:#fff!important}.report-modal-backdrop,.report-modal,.report-modal-scroll{display:contents!important;background:transparent!important}.report-paper h3{break-after:avoid-page;page-break-after:avoid}.report-paper h3,.report-paper tr{break-inside:avoid}}
+    .review-filter{display:grid;grid-template-columns:minmax(190px,1.2fr) minmax(155px,1fr) minmax(155px,1fr) auto;gap:14px;align-items:end}.review-filter input,.review-filter select{width:100%;height:40px;border:1px solid #cfd9d0;border-radius:8px;background:#fff;color:var(--ink);padding:0 10px;font-size:13px}.workbench-grid{display:grid;grid-template-columns:300px minmax(0,1fr);gap:18px;align-items:start}.queue-panel,.review-panel{min-width:0;overflow:hidden}.queue-head{padding:18px 18px 13px;border-bottom:1px solid #e9eee9}.queue-head h2{font-size:16px;margin:0 0 5px}.queue-head span{font-size:12px;color:#7c8b80}.queue-list{max-height:695px;overflow-y:auto}.queue-item{display:block;width:100%;border:0;border-bottom:1px solid #ecf0ec;background:#fff;text-align:left;padding:13px 17px}.queue-item:hover{background:#f8fbf8}.queue-item.active{background:#ecf5ee;box-shadow:inset 3px 0 #2c6c48}.queue-item-top{display:flex;justify-content:space-between;align-items:center;gap:8px;font-size:12px}.queue-item-top strong{color:#263a2e;font-size:12px}.queue-item-meta{display:block;margin-top:6px;font-size:11px;color:#748478}.queue-item-class{display:block;margin-top:7px;font-size:12px;color:#4e6353}.queue-more{display:block;width:calc(100% - 30px);margin:14px 15px;border:1px solid #d6e1d8;border-radius:7px;background:#fff;padding:8px;color:var(--green);font-size:12px}.queue-empty{padding:42px 20px;text-align:center;color:#738478;font-size:13px}.queue-empty strong{display:block;margin-bottom:8px;color:#3b5542;font-size:16px}.queue-empty .secondary{margin-top:15px}.review-panel-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;padding:21px 22px 18px;border-bottom:1px solid #e9eee9}.review-panel-head h2{font-size:18px;margin:0 0 5px}.review-panel-head span{font-size:12px;color:#798a7d}.review-panel-content{display:grid;grid-template-columns:minmax(310px,1.15fr) minmax(290px,1fr);gap:22px;padding:22px}.review-photo{margin:0;background:#f1f4f1;border:1px solid #e4ebe4;border-radius:9px;overflow:hidden}.review-photo img{display:block;width:100%;height:360px;object-fit:cover}.review-photo figcaption{padding:10px 12px;color:#78887c;font-size:11px}.review-facts{display:grid;grid-template-columns:1fr 1fr;gap:14px;padding-top:19px}.review-fact small{display:block;color:#829087;font-size:11px;margin-bottom:5px}.review-fact strong{font-size:13px;color:#2d4032}.review-decision h3{font-size:15px;margin:0 0 12px}.review-original{padding:13px 14px;background:#f6f9f6;border:1px solid #e4ebe4;border-radius:8px;margin-bottom:21px;font-size:12px;color:#607365}.review-original strong{display:block;font-size:14px;color:#2a4030;margin-top:4px}.review-zone-title{font-size:11px;font-weight:800;color:#77887a;margin:14px 0 7px}.review-choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.review-choice{border:1px solid #d8e2d9;border-radius:7px;background:#fff;color:#44594a;padding:10px 11px;text-align:left;font-size:12px}.review-choice:hover{border-color:#81a98b}.review-choice.selected{border-color:#2c6c48;background:#edf6ee;color:#235b3c;font-weight:800;box-shadow:inset 0 0 0 1px #2c6c48}.review-note-field{display:block;margin-top:20px;font-size:12px;font-weight:700;color:#526656}.review-note-field textarea{display:block;width:100%;height:72px;resize:vertical;margin-top:8px;padding:10px;border:1px solid #ccd9ce;border-radius:7px;font-size:13px;color:var(--ink)}.review-work-actions{display:flex;gap:9px;align-items:center;justify-content:flex-end;margin-top:15px}.workbench-error{font-size:12px;color:#a84432;margin:10px 0 0}.review-idle{padding:90px 24px;text-align:center;color:#75877a;font-size:14px}
+    .settings-panel{padding:0;overflow:hidden}.settings-toolbar{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:18px 21px;border-bottom:1px solid #e8eee8}.settings-toolbar p{margin:0;font-size:12px;color:#758478}.settings-tools{display:flex;gap:9px;align-items:center}.settings-tools input{height:39px;width:220px;padding:0 11px;border:1px solid #d2ddd3;border-radius:7px;font-size:13px}.settings-table-wrap{overflow-x:auto;padding:0 21px}.settings-table{width:100%;border-collapse:collapse;min-width:750px}.settings-table th{padding:14px 10px;text-align:left;background:#f7f9f7;border-bottom:1px solid #e4ebe4;color:#647467;font-size:12px}.settings-table td{padding:16px 10px;border-bottom:1px solid #ebf0eb;color:#344638;font-size:13px;vertical-align:middle}.settings-table tbody tr:last-child td{border-bottom:0}.settings-table .setting-name{font-weight:800;color:#273a2d}.settings-table .subline{display:block;color:#849287;font-size:11px;margin-top:5px}.settings-table .actions{display:flex;gap:13px;align-items:center;white-space:nowrap}.settings-table .actions button{border:0;background:none;color:var(--green);font-size:12px;font-weight:700;padding:4px 0}.settings-table .actions button:hover{text-decoration:underline}.settings-table .actions button.warning-action{color:#a26729}.settings-tag{display:inline-block;padding:5px 9px;border-radius:15px;background:#edf5ef;color:#3b7350;font-size:11px;font-weight:800}.settings-tag.disabled{background:#f1f3f1;color:#819085}.settings-tag.protected{background:#eef1f8;color:#556984}.settings-menu-list{max-width:510px;line-height:1.8;color:#566a5b;font-size:12px}.settings-empty{padding:52px 20px;text-align:center;font-size:13px;color:#7a897e}.settings-dialog-backdrop{position:fixed;inset:0;background:#10251866;z-index:30;display:flex;align-items:center;justify-content:center;padding:18px}.settings-dialog{background:#fff;width:min(570px,100%);max-height:min(820px,95vh);overflow-y:auto;border-radius:12px;box-shadow:0 22px 55px #10251833}.settings-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:15px;padding:20px 23px;border-bottom:1px solid #e8eee8}.settings-dialog-head h2{font-size:19px;margin:0}.settings-dialog-body{padding:22px 23px}.settings-form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px}.settings-form-field{min-width:0}.settings-form-field.wide{grid-column:1/-1}.settings-form-field label{display:block;color:#4d6252;font-size:12px;font-weight:700;margin-bottom:7px}.settings-form-field input,.settings-form-field textarea{display:block;width:100%;border:1px solid #cfdacf;border-radius:7px;background:#fff;color:#26372b;padding:10px 11px;font-size:13px}.settings-form-field input{height:40px}.settings-form-field textarea{min-height:67px;resize:vertical}.settings-check-head{font-size:12px;font-weight:800;color:#4f6254;margin:22px 0 11px}.settings-check-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.settings-check{display:flex;align-items:center;gap:9px;padding:11px 12px;border:1px solid #dce6dd;border-radius:7px;color:#3b5142;font-size:13px;cursor:pointer}.settings-check:has(input:checked){border-color:#83ad8d;background:#f0f7f0}.settings-check input{accent-color:#2d6b47}.settings-check small{color:#829288;font-size:11px}.settings-dialog-actions{display:flex;justify-content:flex-end;gap:8px;margin-top:23px}.settings-form-error{color:#a84432;font-size:12px;margin:14px 0 0}
+    @media(max-width:1150px){.workbench-grid{grid-template-columns:260px minmax(0,1fr)}.review-panel-content{grid-template-columns:1fr}.review-photo img{height:300px}}
+    @media(max-width:900px){.review-filter{grid-template-columns:repeat(2,minmax(0,1fr))}.review-filter .action-row{grid-column:1/-1}.workbench-grid{grid-template-columns:1fr}.queue-list{max-height:280px}}
+    @media(max-width:1050px){.layout{grid-template-columns:170px minmax(0,1fr)}.sidebar{padding:25px 10px}.shell{padding:25px 20px 50px}.time-block{min-width:350px}.dashboard-main,.dashboard-bottom{grid-template-columns:1fr}.kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+    @media(max-width:600px){.kpi-grid{grid-template-columns:1fr 1fr}.kpi{padding:16px;min-height:112px}.kpi-value{font-size:26px}.live-head{align-items:flex-start;flex-direction:column}.dashboard .shell{padding-top:20px}.trend-chart{gap:3px}.trend-label{font-size:9px}.dash-panel{padding:16px}}
+    @media(max-width:1350px){.record-filter-grid{grid-template-columns:repeat(2,minmax(150px,1fr)) minmax(340px,2fr)}.record-filter-grid .action-row{grid-column:1/-1}}
+    @media(max-width:900px){.record-filter-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.record-time{grid-column:1/-1}}
+    @media(max-width:720px){.layout{display:block}.sidebar{border-right:0;border-bottom:1px solid var(--line);padding:12px 15px}.brand{padding:0 0 8px}.nav-parent{display:inline-block;padding:7px 8px}.nav-item{display:inline-block;width:auto;padding:8px 12px}.shell{padding:20px 13px 44px}.masthead{display:block}.filter-panel{padding:17px}.filter-layout{display:block}.filter-block{width:100%;min-width:0;margin-bottom:15px}.date-range{flex-wrap:wrap}.date-range input{width:calc(50% - 13px)}.table-scroll{padding:0 13px}.table-toolbar{padding:12px 13px;flex-wrap:wrap}.pagination{margin:0 13px;flex-wrap:wrap}}
+    @media(max-width:560px){.record-filter-grid{grid-template-columns:1fr}.record-time{grid-column:auto}.record-filter-grid .action-row{grid-column:auto}.drawer-head,.drawer-content{padding-left:18px;padding-right:18px}.photo-frame img{height:205px}}
+    @media(max-width:560px){.settings-toolbar{align-items:stretch;flex-direction:column}.settings-tools input{width:100%;min-width:0}.settings-form-grid,.settings-check-grid{grid-template-columns:1fr}.settings-form-field.wide{grid-column:auto}.settings-dialog-body{padding:18px}.settings-dialog-head{padding:17px 18px}}
+    @media(max-width:720px){.report-intro{align-items:flex-start;flex-direction:column}.report-modal-backdrop{padding:0}.report-modal{border-radius:0}.report-modal-head{align-items:flex-start;flex-direction:column}.report-modal-scroll{padding:10px}.report-paper{padding:22px 16px}.report-metrics{grid-template-columns:repeat(2,1fr)}.report-paper-meta{flex-direction:column}.report-filter input{width:145px}}
+  </style>
 </head>
 <body>
-  <div id="root"></div>
-  <script src="./assets/react.production.min.js"></script>
-  <script src="./assets/react-dom.production.min.js"></script>
+  <div id="app"></div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
   <script>
-    window.__AXHUB_DEFINE_COMPONENT__ = function (Component) {
-      ReactDOM.createRoot(document.getElementById('root')).render(React.createElement(Component));
-    };
+    (() => {
+      'use strict';
+      const classes = [
+        { id:'unripe', name:'未熟果串', zone:'A', weight:9 },
+        { id:'black', name:'坚果／黑果', zone:'B', weight:5 },
+        { id:'empty', name:'空果串', zone:'B', weight:5 },
+        { id:'ripe', name:'成熟果串', zone:'C', weight:54 },
+        { id:'overripe', name:'过熟果串', zone:'C', weight:13 },
+        { id:'long', name:'长柄果串', zone:'C', weight:8 },
+        { id:'small', name:'小果串', zone:'C', weight:6 }
+      ];
+      const zones = [
+        { id:'A', name:'A 区 · 观察区' },
+        { id:'B', name:'B 区 · 剔除区' },
+        { id:'C', name:'C 区 · 主通道' }
+      ];
+      const slots = [
+        [4,10,220], [8,15,210], [11,30,160],
+        [15,10,225], [19,30,130], [23,20,290]
+      ];
+      const dataCutoff = new Date(2026,9,14,17,40,0);
+      const pad = n => String(n).padStart(2,'0');
+      const dateKey = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+      const dateTime = d => `${dateKey(d)} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      const dateTimeSeconds = d => `${dateTime(d)}:${pad(d.getSeconds())}`;
+      const inputTime = d => `${dateKey(d)}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+      const number = n => n.toLocaleString('zh-CN');
+      const percent = (part,total) => total ? `${(part/total*100).toFixed(1)}%` : '0.0%';
+      const escapeHtml = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+      const blankCounts = () => Object.fromEntries(classes.map(c => [c.id,0]));
+      function random(seed){let x=seed>>>0;return () => {x=(x*1664525+1013904223)>>>0;return x/4294967296;};}
+      function pickClass(r){const n=r()*100;let sum=0;for(const c of classes){sum+=c.weight;if(n<sum)return c;}return classes[classes.length-1];}
+      function createDemoData(){
+        const batches=[],detections=[];
+        let dayIndex=0;
+        for(let day=new Date(2026,8,1);day<=dataCutoff;day.setDate(day.getDate()+1),dayIndex++){
+          for(let slotIndex=0;slotIndex<slots.length;slotIndex++){
+            const [hour,minute,duration]=slots[slotIndex];
+            const start=new Date(day.getFullYear(),day.getMonth(),day.getDate(),hour,minute);
+            if(start>dataCutoff)continue;
+            const plannedEnd=new Date(start.getTime()+duration*60000);
+            const ended=plannedEnd<=dataCutoff;
+            const id=`PB-${dateKey(start).replaceAll('-','')}-${pad(slotIndex+1)}`;
+            const batch={id,start,end:null,counts:blankCounts(),total:0};
+            const rand=random((dayIndex+1)*6371+(slotIndex+1)*2909);
+            const plannedCount=48+(dayIndex*7+slotIndex*11)%31;
+            for(let i=0;i<plannedCount;i++){
+              const at=new Date(start.getTime()+Math.round((i+.5)/plannedCount*duration)*60000);
+              if(at>dataCutoff)break;
+              const cls=pickClass(rand);
+              detections.push({batchId:id,at,classId:cls.id});
+              batch.counts[cls.id]++;
+              batch.total++;
+              if(ended)batch.end=at;
+            }
+            batches.push(batch);
+          }
+        }
+        return {batches,detections};
+      }
+      const demo=createDemoData();
+      const defaultStart='2026-10-08T00:00';
+      const defaultEnd='2026-10-14T23:59';
+      function createRecordData(){
+        const perDay=new Map();
+        return demo.detections.filter(item=>item.at>=new Date(defaultStart)).reverse().map((item,index)=>{
+          const day=dateKey(item.at).replaceAll('-','');
+          const sequence=(perDay.get(day)||0)+1;perDay.set(day,sequence);
+          const original=classes.find(c=>c.id===item.classId);
+          const status=index%23===8?'failed':index%13===3&&item.at.getTime()<dataCutoff.getTime()-7200000?'reviewed':original.zone==='B'?'pending':'recognized';
+          const finalClass=status==='reviewed'?classes[(classes.findIndex(c=>c.id===item.classId)+1)%classes.length]:original;
+          const confidence=status==='failed'?null:0.68+(index%28)*0.011;
+          const reviewHistory=status==='reviewed'?[{beforeId:original.id,afterId:finalClass.id,at:new Date(item.at.getTime()+45*60000),note:''}]:[];
+          return {id:`PF-${day}-${String(sequence).padStart(4,'0')}`,batchId:item.batchId,at:item.at,status,originalClass:status==='failed'?null:original,finalClass:status==='failed'?null:finalClass,route:status==='failed'?null:original.zone,confidence,reviewHistory};
+        });
+      }
+      const records=createRecordData();
+      const recordById=new Map(records.map(record=>[record.id,record]));
+      const permissionMenus=[
+        {id:'dashboard',name:'任务看板'}, {id:'period',name:'周期汇总'},
+        {id:'batch',name:'批次详情'}, {id:'reports',name:'每日报告'}, {id:'records',name:'检测记录'},
+        {id:'review',name:'复核工作台'}, {id:'roles',name:'角色管理'},
+        {id:'accounts',name:'账号管理'}
+      ];
+      const roles=[
+        {id:'operator',name:'现场操作员',description:'查看产线与检测记录',enabled:true,menus:['dashboard','records']},
+        {id:'reviewer',name:'复核员',description:'处理每日复核队列',enabled:true,menus:['dashboard','records','review']},
+        {id:'analyst',name:'数据查看员',description:'查看生产统计',enabled:true,menus:['dashboard','period','batch','reports','records']}
+      ];
+      const accounts=[
+        {id:'admin',name:'系统管理员',builtin:true,enabled:true,roleIds:[]},
+        {id:'operator01',name:'现场操作员',builtin:false,enabled:true,roleIds:['operator']},
+        {id:'review01',name:'复核专员',builtin:false,enabled:true,roleIds:['reviewer','analyst']},
+        {id:'report01',name:'数据查看员',builtin:false,enabled:false,roleIds:['analyst']}
+      ];
+      const validViews=['dashboard','period','batch','reports','records','review','roles','accounts'];
+      const hashView=()=>typeof location==='undefined'?null:new URLSearchParams(location.hash.slice(1)).get('page');
+      function savedLanguage(){try{return localStorage.getItem('palm-sort-language')==='en'?'en':'zh';}catch{return 'zh';}}
+      const state={view:validViews.includes(hashView())?hashView():'dashboard',lang:savedLanguage(),grain:'day',dashboardGrain:'hour',dashboardNow:new Date(dataCutoff),dashboardLastSuccess:new Date(dataCutoff),dashboardTick:0,dashboardPaused:false,cameraOpen:false,dashboardInterrupted:typeof location!=='undefined'&&new URLSearchParams(location.search).get('offline')==='1',draftStart:defaultStart,draftEnd:defaultEnd,start:defaultStart,end:defaultEnd,batchQuery:'',batchQuery:'',appliedBatchQuery:'',recordDraft:{id:'',batch:'',start:defaultStart,end:defaultEnd,status:'',classification:''},recordApplied:{id:'',batch:'',start:defaultStart,end:defaultEnd,status:'',classification:''},queueDraft:{batch:'',date:'',type:''},queueApplied:{batch:'',date:'',type:''},queueSkipped:new Set(),queueLimit:40,queueSelectedId:null,queueLoadedId:null,queueDraftClass:'',queueNote:'',queueError:'',accountSearchDraft:'',accountSearch:'',settingsModal:null,settingsDraft:null,settingsError:'',selectedRecordId:null,reviewMode:false,reviewDraftClass:'',reviewDraftNote:'',reviewError:'',reportDraftStart:'2026-10-08',reportDraftEnd:'2026-10-13',reportStart:'2026-10-08',reportEnd:'2026-10-13',reportOpenId:null,reportExpanded:new Set(),page:1,error:''};
+      function productionRange(day){const [y,m,d]=day.split('-').map(Number),start=new Date(y,m-1,d,4),end=new Date(y,m-1,d+1,4);return {start,end};}
+      function snapshotReport(day,createdAt,version,kind){
+        const {start,end}=productionRange(day),items=records.filter(r=>r.at>=start&&r.at<end),batchItems=demo.batches.filter(b=>b.start>=start&&b.start<end);
+        const counts=blankCounts(),routes={A:0,B:0,C:0},hourly=Array(24).fill(0),shifts=Array(3).fill(0);
+        let pending=0,reviewed=0,failed=0;
+        const reportItems=items.map(r=>{
+          const history=r.reviewHistory.filter(h=>new Date(h.at)<=createdAt).sort((a,b)=>new Date(a.at)-new Date(b.at));
+          const finalId=history.length?history[history.length-1].afterId:r.originalClass?.id||null;
+          const cls=classes.find(c=>c.id===finalId);
+          const status=history.length?'reviewed':!r.originalClass?'failed':r.route==='B'?'pending':'recognized';
+          if(cls)counts[cls.id]++;
+          if(r.route)routes[r.route]++;
+          if(status==='reviewed')reviewed++;
+          if(status==='pending'||status==='failed')pending++;
+          if(status==='failed')failed++;
+          const hour=Math.floor((r.at-start)/3600000);if(hour>=0&&hour<24){hourly[hour]++;shifts[Math.floor(hour/8)]++;}
+          return {record:r,route:r.route,finalId,status};
+        });
+        const contributingIds=[...new Set(reportItems.map(item=>item.record.batchId))];
+        const batches=contributingIds.map(id=>{const b=demo.batches.find(item=>item.id===id),own=reportItems.filter(item=>item.record.batchId===id),zone={A:0,B:0,C:0};for(const item of own)if(item.route)zone[item.route]++;return {id,start:b.start,end:b.end,total:own.length,zone};});
+        return {id:`${day}-v${version}`,day,version,kind,createdAt:new Date(createdAt),range:{start,end},total:items.length,batchCount:batchItems.length,counts,routes,hourly,shifts,pending,reviewed,failed,batches};
+      }
+      const reportVersions=[];
+      for(let d=8;d<=13;d++){const day=`2026-10-${pad(d)}`;reportVersions.push(snapshotReport(day,new Date(2026,9,d+1,8),1,'auto'));}
+      reportVersions.push(snapshotReport('2026-10-12',new Date(2026,9,14,10,30),2,'manual'));
+      const pageSize=15;
+      const app=document.getElementById('app');
+      let toastTimer;
+      const englishPairs=Object.entries({
+        '棕榈果分拣系统':'Palm Fruit Sorting System','任务看板':'Task Dashboard','数据统计':'Data Statistics',
+        '实时状态':'Live Status','当前班次指标':'Current Shift Metrics','趋势统计维度':'Trend Granularity',
+        '七类分类数量变化趋势':'Seven-class Classification Trend','查看摄像机画面':'View Camera Feed',
+        '统计条件':'Statistics Filters','检测记录筛选':'Detection Filters','导出当前列表（演示入口）':'Export Current List (demo)',
+        '果串检测详情':'Bunch Detection Details','可填写判断依据':'Optional reasoning note',
+        '可记录改判原因':'Optional reason for reclassification',
+        '请选择有效的开始和结束时间。':'Choose a valid start and end time.','结束时间不能早于开始时间。':'End time cannot be earlier than start time.',
+        '请选择有效的检测起止时间。':'Choose a valid detection time range.','请选择确认后的分类。':'Choose the confirmed class.',
+        '请选择确认分类。':'Choose a class to confirm.','复核结果已更新。':'Review result updated.',
+        '复核已提交，已进入下一条。':'Review submitted. Showing the next record.',
+        '演示版暂不生成文件。':'This demo does not create a file.','已保存（仅当前页面会话）。':'Saved for this page session only.',
+        '请输入角色名称。':'Enter a role name.','角色名称已存在。':'This role name already exists.',
+        '请至少选择一个可访问菜单。':'Choose at least one accessible menu.','请输入新密码。':'Enter a new password.',
+        '请填写登录账号和姓名。':'Enter a username and name.','请至少分配一个角色。':'Assign at least one role.',
+        '登录账号已存在。':'This username already exists.','请输入初始密码。':'Enter an initial password.',
+        '角色已启用。':'Role enabled.','角色已停用。':'Role disabled.','账号已启用。':'Account enabled.','账号已停用。':'Account disabled.',
+        '产线已暂停（演示）':'Line paused (demo).','产线已恢复（演示）':'Line resumed (demo).',
+        '更新中断，暂不可操作':'Updates interrupted; control unavailable',
+        '每日报告 PDF 预览':'Daily Report PDF Preview','每日报告预览':'Daily Report Preview','棕榈果分拣每日报告':'Palm Fruit Sorting Daily Report',
+        '每日报告':'Daily Reports','已生成报告':'Generated Reports','生产日':'Production Day','报告版本':'Report Version',
+        '报告编号':'Report ID','生成时间':'Generated At','定时生成':'Scheduled','手工重新生成':'Regenerated Manually',
+        '最新版':'Latest','历史版本':'Past Version','查看历史版本':'View Versions','收起历史版本':'Hide Versions',
+        '重新生成':'Regenerate','预览':'Preview','导出 PDF':'Export PDF','PDF 版式预览':'PDF Layout Preview',
+        '导出时请在浏览器中选择“保存为 PDF”':'Choose “Save as PDF” in the browser print dialog',
+        '每日 08:00 自动生成，支持按需重新生成并保留历史版本':'Automatically generated at 08:00; regenerate when needed, with versions retained',
+        '没有符合条件的报告':'No reports match these filters','请调整生产日范围后查询。':'Adjust the production day range.',
+        '请选择有效的生产日范围。':'Choose a valid production day range.','已生成新版本，历史版本已保留。':'New version generated; previous versions retained.',
+        '批次数':'Batches','检测果串总数':'Bunches Inspected','分类异常占比':'Classified Abnormal Rate',
+        '分拣去向（演示）':'Sorting Route (Demo)','最新分类结果':'Latest Classification Result','无去向':'No Route',
+        '暂无分类':'Unclassified','占检测总量':'Share of Inspected','数量':'Count',
+        '班次与小时变化':'Shift and Hourly Trend','每小时检测量':'Hourly Inspections','复核情况':'Review Summary',
+        '已复核':'Reviewed','待复核（含识别失败）':'Pending Review (incl. failures)','其中：识别失败':'Of Which: Recognition Failed','逐批次摘要':'Batch Summary',
+        '开始／结束时间':'Start / End Time','分类结果采用本版本生成时的最新复核结论。当前演示数据仅有算法决定去向，正式报告中的实际去向需接入设备执行反馈。':'Classification reflects the latest review at generation. This demo only has AI routing decisions; actual routes require equipment feedback.',
+        '新增批次数按批次开始时间计算。批次表列出本生产日内有检测记录的批次，每行只统计本生产日的果串；A/B/C 数量在演示中按算法决定去向统计，无去向果串计入总数。':'New batches are counted by start time. Batch rows include detections within this production day only; Zone A/B/C uses AI routing decisions in this demo, and bunches without routes remain in the total.',
+        '演示数据':'Demo Data','开始生产日':'Production Day Start','结束生产日':'Production Day End',
+        '周期汇总':'Period Summary','批次详情':'Batch Details','检测记录详情':'Detection Details','检测记录':'Detection Records',
+        '复核工作台':'Review Workbench','系统设置':'System Settings','角色管理':'Role Management','账号管理':'Account Management',
+        '产线总览':'Production Overview','检测复核':'Detection Review','产线设备':'Line Equipment',
+        '当前条件下没有统计数据':'No statistics match these filters','请调整统计维度或时间范围后查询。':'Adjust the granularity or time range.',
+        '没有符合条件的批次':'No batches match these filters','可调整时间范围或批次编号后查询。':'Adjust the time range or batch number.',
+        '没有符合条件的检测记录':'No detection records match these filters','请调整筛选条件后重新查询。':'Adjust the filters and search again.',
+        '当前条件下没有待处理记录':'No pending records match these filters','可调整筛选条件。':'Adjust the filters.',
+        '本轮已浏览完':'All records in this pass have been viewed','跳过的记录仍在待处理队列中。':'Skipped records remain in the queue.',
+        '重新查看已跳过':'Review skipped records again','请选择一条待处理记录。':'Select a pending record.',
+        '画面演示 · 未接入实时视频流':'Demo image · live video not connected','正式接入后，此处显示摄像机实时视频。':'Live camera video will appear here when connected.',
+        '摄像机离线，无法查看画面':'Camera offline; video unavailable','摄像机离线，暂无画面':'Camera offline; no video available','请检查摄像机连接。':'Check the camera connection.',
+        '摄像机实时画面':'Live Camera View','摄像机画面演示图':'Camera preview demo image','果串抓拍示例':'Sample bunch capture','棕榈果串抓拍示例图':'Sample palm bunch capture',
+        '棕榈果串检测照片演示图':'Sample palm bunch detection photo','检测照片 · 演示图片':'Detection photo · demo image',
+        '内置管理员账号':'Built-in administrator account','全部菜单 · 内置':'All menus · built-in','不可编辑':'Read only',
+        '按页面配置角色可访问的菜单':'Choose which pages each role can access','分配角色（可多选）':'Assign roles (multiple allowed)',
+        '角色说明（选填）':'Role description (optional)','复核备注（选填）':'Review note (optional)',
+        '当前班次 · 含识别失败':'Current shift · includes recognition failures','分类变化趋势':'Classification Trend',
+        '当前班次分类':'Current Shift Classification','最近检测结果':'Recent Detections','演示数据 · 每 10 秒更新':'Demo data · updates every 10 seconds',
+        '算法原始分类':'Original AI Classification','算法原始判断':'Original AI Result','算法决定去向':'AI Routing Decision',
+        '识别失败，请人工选择分类':'Recognition failed; choose a class','确认果串分类':'Confirm Bunch Class',
+        '提交复核并处理下一条':'Submit and Continue','待处理队列':'Pending Queue','队列类型':'Queue Type',
+        '全部类型':'All Types','B 区待复核':'Zone B Pending Review','由近到远':'Newest First',
+        '角色名称':'Role Name','可访问菜单':'Accessible Menus','关联账号':'Linked Accounts','关联角色':'Assigned Roles',
+        '新增角色':'Add Role','编辑角色':'Edit Role','新增账号':'Add Account','编辑账号':'Edit Account',
+        '重置密码':'Reset Password','初始密码':'Initial Password','新密码':'New Password','登录账号':'Username',
+        '现场操作员':'Line Operator','复核专员':'Review Specialist','复核员':'Reviewer','数据查看员':'Data Viewer',
+        '系统管理员':'System Administrator','班组管理':'Shift Management','查看产线与检测记录':'View line and detection records',
+        '处理每日复核队列':'Handle daily review queue','查看生产统计':'View production statistics',
+        '没有符合条件的账号':'No accounts match this search','搜索账号或姓名':'Search username or name',
+        '请输入登录账号':'Enter username','请输入姓名':'Enter name','请输入初始密码':'Enter initial password',
+        '请输入新密码':'Enter new password','请输入角色名称':'Enter role name','简要说明该角色的职责':'Describe this role briefly',
+        '查看全部 →':'View All →','查看检测记录 →':'View Detection Records →','查看画面 →':'View Camera →',
+        '当前 B 区分类':'Currently Classified as Zone B','产线已暂停，可恢复运行':'Line paused; ready to resume',
+        '产线运行控制':'Line Controls','产线已暂停':'Line Paused','产线运行中':'Line Running','更新中断':'Update Interrupted',
+        '检测总量':'Total Inspected','异常占比':'Abnormal Rate','待复核':'Pending Review','识别失败':'Recognition Failed',
+        '按小时':'Hourly','按班次':'By Shift','按日':'Daily','统计维度':'Granularity','时间范围':'Time Range',
+        '统计周期':'Period','新增批次数':'New Batches','果串总数':'Total Bunches','果串编号':'Bunch ID',
+        '批次编号':'Batch ID','批次号':'Batch No.','所属批次':'Batch','开始检测时间':'Start Time',
+        '结束检测时间':'End Time','检测时间':'Detection Time','检测日期':'Detection Date',
+        '批次状态':'Batch Status','当前分类':'Current Class','预测分类':'Predicted Class','分类':'Class',
+        '置信度':'Confidence','去向':'Route','状态':'Status','详情':'Details','复核':'Review',
+        '已识别':'Recognized','已复核':'Reviewed','进行中':'In Progress','已结束':'Completed',
+        '小计':'Subtotal','部分周期':'Partial Period','查看详情':'View Details',
+        'A 区':'Zone A','B 区':'Zone B','C 区':'Zone C',
+        '未熟果串':'Unripe Bunch','坚果／黑果':'Hard / Black Bunch','空果串':'Empty Bunch',
+        '成熟果串':'Ripe Bunch','过熟果串':'Overripe Bunch','长柄果串':'Long-stalk Bunch','小果串':'Small Bunch',
+        '早班':'Morning Shift','午班':'Afternoon Shift','晚班':'Night Shift','次日':'next day',
+        '筛选条件':'Filters','查询':'Search','重置':'Reset','搜索':'Search','导出数据':'Export Data',
+        '上一页':'Previous','下一页':'Next','显示':'Showing','条，共':'of',
+        '记录信息':'Record Information','检测照片':'Detection Photo','人工复核':'Manual Review',
+        '暂无复核记录。':'No review history yet.','再次复核':'Review Again','发起复核':'Start Review',
+        '确认复核':'Confirm Review','确认分类':'Confirmed Class','请选择分类':'Choose a class',
+        '取消':'Cancel','保存':'Save','编辑':'Edit','操作':'Actions','角色':'Role','账号':'Account',
+        '姓名':'Name','说明':'Description','启用':'Active','停用':'Disabled','已停用':'Disabled',
+        '在线':'Online','离线':'Offline','摄像机':'Camera','画面演示':'Demo Image',
+        '查看画面':'View Camera','一键暂停':'Pause Line','恢复运行':'Resume Line','运行中':'Running','已暂停':'Paused',
+        '加载更多':'Load More','跳过':'Skip','班次':'Shift','统计':'Statistics',
+        '请输入编号':'Enter bunch ID','请输入批次号':'Enter batch number','输入批次号':'Enter batch number',
+        '搜索批次编号':'Search batch ID','全部状态':'All Statuses','全部分类':'All Classes',
+        '开始时间':'Start Time','结束时间':'End Time','检测开始时间':'Detection Start','检测结束时间':'Detection End',
+        '关闭详情':'Close details','关闭画面':'Close camera','关闭':'Close','主菜单':'Main navigation',
+        '最近更新':'Last updated','当前':'Current','暂无识别分类':'No recognized class','去向待定':'Route unknown',
+        '原始':'Original','算法判断':'AI Result','至':'to','备注':'Note','选填':'Optional',
+        '系统设置 /':'System Settings /','数据统计 /':'Data Statistics /'
+      }).sort((a,b)=>b[0].length-a[0].length);
+      function translateText(value){
+        let result=String(value);
+        result=result.replace(/当前(?=早班|午班|晚班)/g,'当前 ')
+          .replace(/第 (\d+) 次复核/g,'Review #$1')
+          .replace(/显示 ([\d,]+)–([\d,]+) 条，共 ([\d,]+) 条/g,'Showing $1–$2 of $3 records')
+          .replace(/第 (\d+) \/ ([\d,]+) 页/g,'Page $1 / $2')
+          .replace(/加载更多（剩余 ([\d,]+) 条）/g,'Load More ($1 remaining)')
+          .replace(/共 ([\d,]+) 串/g,'$1 bunches')
+          .replace(/([\d,]+) 串/g,'$1 bunches');
+        for(const [zh,en] of englishPairs)result=result.split(zh).join(en);
+        return result.replaceAll('、',', ').replaceAll('（','(').replaceAll('）',')');
+      }
+      function applyLanguage(){
+        if(typeof app.querySelector!=='function')return;
+        const header=app.querySelector('.masthead');
+        if(header)header.insertAdjacentHTML('beforeend',`<div class="language-switch" role="group" aria-label="Language"><button type="button" data-action="language" data-lang="zh" class="${state.lang==='zh'?'active':''}" aria-pressed="${state.lang==='zh'}">中文</button><button type="button" data-action="language" data-lang="en" class="${state.lang==='en'?'active':''}" aria-pressed="${state.lang==='en'}">English</button></div>`);
+        if(typeof document!=='undefined'){document.documentElement.lang=state.lang==='en'?'en':'zh-CN';document.title=state.lang==='en'?'Palm Fruit Sorting System · Prototype':'棕榈果分拣系统 · 页面评审版';}
+        if(state.lang!=='en')return;
+        const walker=document.createTreeWalker(app,NodeFilter.SHOW_TEXT);
+        const nodes=[];while(walker.nextNode())nodes.push(walker.currentNode);
+        for(const node of nodes){if(node.parentElement?.closest('.review-note, textarea'))continue;if(/[\u3400-\u9fff]/.test(node.nodeValue))node.nodeValue=translateText(node.nodeValue);}
+        for(const el of app.querySelectorAll('[placeholder],[aria-label],[title],[alt]')){
+          for(const attr of ['placeholder','aria-label','title','alt']){
+            if(el.hasAttribute(attr))el.setAttribute(attr,translateText(el.getAttribute(attr)));
+          }
+        }
+      }
+      function showToast(message){
+        const el=document.getElementById('toast');
+        el.textContent=state.lang==='en'?translateText(message):message;el.classList.add('show');
+        clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove('show'),2800);
+      }
+      function bounds(){
+        const start=new Date(state.start).getTime();
+        const end=new Date(state.end).getTime()+60000;
+        return {start,end};
+      }
+      function bucket(date,grain){
+        const y=date.getFullYear(),m=date.getMonth(),d=date.getDate(),h=date.getHours();
+        if(grain==='hour'){
+          const start=new Date(y,m,d,h),end=new Date(y,m,d,h+1);
+          return {start,end,label:`${dateKey(start)} ${pad(h)}:00–${pad(h)}:59`};
+        }
+        if(grain==='day'){
+          const start=new Date(y,m,d),end=new Date(y,m,d+1);
+          return {start,end,label:dateKey(start)};
+        }
+        let start,shift;
+        if(h>=20){start=new Date(y,m,d,20);shift='晚班';}
+        else if(h>=12){start=new Date(y,m,d,12);shift='午班';}
+        else if(h>=4){start=new Date(y,m,d,4);shift='早班';}
+        else{start=new Date(y,m,d-1,20);shift='晚班';}
+        const end=new Date(start.getTime()+8*3600000);
+        return {start,end,label:`${dateKey(start)} · ${shift}`};
+      }
+      function zoneCount(counts,zone){return classes.filter(c=>c.zone===zone).reduce((sum,c)=>sum+counts[c.id],0);}
+      function periodRows(){
+        const {start,end}=bounds();
+        const map=new Map();
+        const ensure=at=>{
+          const b=bucket(at,state.grain),key=b.start.getTime();
+          if(!map.has(key))map.set(key,{...b,newBatches:0,total:0,counts:blankCounts()});
+          return map.get(key);
+        };
+        for(const b of demo.batches){const t=b.start.getTime();if(t>=start&&t<end)ensure(b.start).newBatches++;}
+        for(const item of demo.detections){const t=item.at.getTime();if(t>=start&&t<end){const row=ensure(item.at);row.total++;row.counts[item.classId]++;}}
+        return [...map.values()].sort((a,b)=>b.start-a.start);
+      }
+      function batchRows(){
+        const {start,end}=bounds(),query=state.appliedBatchQuery.trim().toLowerCase();
+        return demo.batches.filter(b=>{
+          const t=b.start.getTime();return t>=start&&t<end&&b.id.toLowerCase().includes(query);
+        }).sort((a,b)=>b.start-a.start);
+      }
+      function metricCell(count,total,zone){
+        return `<td class="metric ${zone==='B'?'b-zone':''}"><strong>${number(count)}</strong><small>${percent(count,total)}</small></td>`;
+      }
+      function classificationHeaders(){
+        return `<tr><th class="sticky-col" rowspan="2">${state.view==='period'?'统计周期':'批次编号'}</th>${state.view==='period'?'<th rowspan="2">新增批次数</th>':'<th rowspan="2">开始检测时间</th><th rowspan="2">结束检测时间</th><th rowspan="2">批次状态</th>'}<th rowspan="2">果串总数</th><th class="group-a" colspan="2">A 区</th><th class="group-b" colspan="3">B 区</th><th class="group-c" colspan="5">C 区</th></tr><tr>${zones.map(z=>`<th class="group-${z.id.toLowerCase()}">小计</th>${classes.filter(c=>c.zone===z.id).map(c=>`<th class="group-${z.id.toLowerCase()}">${c.name}</th>`).join('')}`).join('')}</tr>`;
+      }
+      function classificationCells(row){
+        return zones.map(z=>metricCell(zoneCount(row.counts,z.id),row.total,z.id)+classes.filter(c=>c.zone===z.id).map(c=>metricCell(row.counts[c.id],row.total,z.id)).join('')).join('');
+      }
+      function periodTable(rows){
+        const {start,end}=bounds();
+        const pageRows=rows.slice((state.page-1)*pageSize,state.page*pageSize);
+        const body=pageRows.map(row=>{
+          const partial=start>row.start.getTime()||end<row.end.getTime();
+          return `<tr class="data-row"><td class="sticky-col"><div class="period-label"><span class="main-value">${row.label}</span>${partial?'<span class="partial">部分周期</span>':''}</div></td><td class="numeric main-value">${number(row.newBatches)}</td><td class="numeric main-value">${number(row.total)}</td>${classificationCells(row)}</tr>`;
+        }).join('');
+        return `<div class="table-scroll"><table class="data-table period-table"><thead>${classificationHeaders()}</thead><tbody>${body||`<tr><td colspan="13"><div class="empty-state"><strong>当前条件下没有统计数据</strong><span>请调整统计维度或时间范围后查询。</span></div></td></tr>`}</tbody></table></div>`;
+      }
+      function batchTable(rows){
+        const pageRows=rows.slice((state.page-1)*pageSize,state.page*pageSize);
+        const body=pageRows.map(row=>`<tr class="data-row"><td class="sticky-col main-value batch-id">${row.id}</td><td class="numeric">${dateTime(row.start)}</td><td class="numeric">${row.end?dateTime(row.end):'<span class="muted-value">—</span>'}</td><td><span class="state-pill ${row.end?'done':'running'}">${row.end?'已结束':'进行中'}</span></td><td class="numeric main-value">${number(row.total)}</td>${classificationCells(row)}</tr>`).join('');
+        return `<div class="table-scroll"><table class="data-table batch-table"><thead>${classificationHeaders()}</thead><tbody>${body||`<tr><td colspan="15"><div class="empty-state"><strong>没有符合条件的批次</strong><span>可调整时间范围或批次编号后查询。</span></div></td></tr>`}</tbody></table></div>`;
+      }
+      const statusNames={recognized:'已识别',pending:'待复核',reviewed:'已复核',failed:'识别失败'};
+      function recordRows(){
+        const f=state.recordApplied;
+        const start=new Date(f.start).getTime(),end=new Date(f.end).getTime()+60000;
+        const id=f.id.trim().toLowerCase(),batch=f.batch.trim().toLowerCase();
+        return records.filter(record=>record.at.getTime()>=start&&record.at.getTime()<end&&record.id.toLowerCase().includes(id)&&record.batchId.toLowerCase().includes(batch)&&(!f.status||record.status===f.status)&&(!f.classification||record.finalClass?.id===f.classification));
+      }
+      function recordTable(rows){
+        const pageRows=rows.slice((state.page-1)*pageSize,state.page*pageSize);
+        const body=pageRows.map(record=>`<tr class="data-row"><td class="sticky-col main-value">${record.id}</td><td class="batch-id">${record.batchId}</td><td class="numeric">${dateTimeSeconds(record.at)}</td><td>${record.route?`${record.route} 区`:'<span class="muted-value">—</span>'}</td><td>${record.finalClass?record.finalClass.name:'<span class="muted-value">—</span>'}</td><td class="confidence">${record.confidence===null?'<span class="muted-value">—</span>':`${(record.confidence*100).toFixed(1)}%`}</td><td><span class="status-pill status-${record.status}">${statusNames[record.status]}</span></td><td><div class="record-actions"><button type="button" class="detail-link" data-action="record-detail" data-record-id="${record.id}">详情</button><button type="button" class="detail-link review-link" data-action="record-review" data-record-id="${record.id}">复核</button></div></td></tr>`).join('');
+        return `<div class="table-scroll"><table class="data-table record-table"><thead><tr><th class="sticky-col">果串编号</th><th>所属批次</th><th>检测时间</th><th>去向</th><th>分类</th><th>置信度</th><th>状态</th><th>详情</th></tr></thead><tbody>${body||`<tr><td colspan="8"><div class="empty-state"><strong>没有符合条件的检测记录</strong><span>请调整筛选条件后重新查询。</span></div></td></tr>`}</tbody></table></div>`;
+      }
+      function recordDetail(record){
+        if(!record)return '';
+        const value=text=>text===null||text===undefined?'<span class="muted-value">—</span>':text;
+        const reviewItems=record.reviewHistory.map((entry,index)=>{
+          const before=classes.find(c=>c.id===entry.beforeId)?.name||'—';
+          const after=classes.find(c=>c.id===entry.afterId)?.name||'—';
+          return `<div class="review-entry"><div class="review-flow"><span>${before}</span><span class="arrow">→</span><strong>${after}</strong></div><p class="review-meta">第 ${index+1} 次复核 · ${dateTimeSeconds(entry.at)}</p>${entry.note?`<p class="review-note">${escapeHtml(entry.note)}</p>`:''}</div>`;
+        }).join('');
+        const reviewForm=state.reviewMode?`<div class="review-form"><label class="field-label" for="review-class">确认分类</label><select id="review-class"><option value="">请选择分类</option>${classes.map(c=>`<option value="${c.id}" ${state.reviewDraftClass===c.id?'selected':''}>${c.name}</option>`).join('')}</select><label class="field-label" for="review-note">复核备注（选填）</label><textarea id="review-note" rows="3" placeholder="可记录改判原因">${escapeHtml(state.reviewDraftNote)}</textarea><p class="review-error ${state.reviewError?'visible':''}" role="alert">${escapeHtml(state.reviewError)}</p><div class="review-form-actions"><button type="button" class="primary" data-action="confirm-review">确认复核</button><button type="button" class="secondary" data-action="cancel-review">取消</button></div></div>`:'';
+        return `<div class="drawer-backdrop" data-action="detail-backdrop"><aside class="drawer" role="dialog" aria-modal="true" aria-label="果串检测详情"><div class="drawer-head"><div><div class="eyebrow">检测记录详情</div><h2>${record.id}</h2></div><button type="button" class="drawer-close" data-action="close-detail" aria-label="关闭详情">×</button></div><div class="drawer-content"><figure class="photo-frame"><img src="assets/palm-bunch-CXev_nJe.jpg" alt="棕榈果串抓拍示例图"><figcaption>检测照片</figcaption></figure><section class="detail-section"><h3>记录信息</h3><dl class="detail-grid"><div class="detail-item"><dt>所属批次</dt><dd>${record.batchId}</dd></div><div class="detail-item"><dt>检测时间</dt><dd>${dateTimeSeconds(record.at)}</dd></div><div class="detail-item"><dt>状态</dt><dd><span class="detail-status status-${record.status}">${statusNames[record.status]}</span></dd></div><div class="detail-item"><dt>当前分类</dt><dd>${value(record.finalClass?.name)}</dd></div></dl></section><section class="detail-section"><h3>算法原始判断</h3><dl class="detail-grid"><div class="detail-item"><dt>预测分类</dt><dd>${value(record.originalClass?.name)}</dd></div><div class="detail-item"><dt>置信度</dt><dd>${record.confidence===null?value(null):`${(record.confidence*100).toFixed(1)}%`}</dd></div><div class="detail-item wide"><dt>算法决定去向</dt><dd>${value(record.route?`${record.route} 区`:null)}</dd></div></dl></section><section class="detail-section"><div class="review-heading"><h3>人工复核</h3>${!state.reviewMode?`<button type="button" class="secondary" data-action="start-review">${record.reviewHistory.length?'再次复核':'发起复核'}</button>`:''}</div>${reviewForm}${reviewItems||'<p class="detail-note">暂无复核记录。</p>'}</section></div></aside></div>`;
+      }
+      const chartColors={unripe:'#8aaa70',black:'#9a6b3f',empty:'#c99a64',ripe:'#3c8060',overripe:'#6aa890',long:'#87b6a7',small:'#b7d1bb'};
+      function dashboardSource(){
+        const early=demo.detections.filter(item=>item.at<new Date(defaultStart)).map(item=>({at:item.at,status:'recognized',finalClass:classes.find(c=>c.id===item.classId)}));
+        return early.concat(records);
+      }
+      function aggregate(items){
+        const counts=blankCounts(),summary={total:0,pending:0,failed:0,counts};
+        for(const item of items){
+          summary.total++;
+          if(item.status==='pending')summary.pending++;
+          if(item.status==='failed')summary.failed++;
+          else if(item.finalClass)counts[item.finalClass.id]++;
+        }
+        return summary;
+      }
+      function dashboardBuckets(){
+        const now=state.dashboardNow,currentShift=bucket(now,'shift'),result=[];
+        if(state.dashboardGrain==='hour'){
+          for(let i=0;i<8;i++){const start=new Date(currentShift.start.getTime()+i*3600000);result.push({start,end:new Date(start.getTime()+3600000),label:pad(start.getHours())});}
+        }else if(state.dashboardGrain==='shift'){
+          for(let i=20;i>=0;i--){const start=new Date(currentShift.start.getTime()-i*8*3600000);result.push({start,end:new Date(start.getTime()+8*3600000),label:i%3===0?`${pad(start.getMonth()+1)}/${pad(start.getDate())}`:`　`});}
+        }else{
+          for(let i=29;i>=0;i--){const start=new Date(now.getFullYear(),now.getMonth(),now.getDate()-i);result.push({start,end:new Date(start.getFullYear(),start.getMonth(),start.getDate()+1),label:i%5===0?`${pad(start.getMonth()+1)}/${pad(start.getDate())}`:`　`});}
+        }
+        const source=dashboardSource();
+        return result.map(b=>({...b,summary:aggregate(source.filter(item=>item.at>=b.start&&item.at<b.end&&item.at<=now))}));
+      }
+      function dashboardTrend(){
+        const rows=dashboardBuckets(),max=Math.max(1,...rows.map(row=>row.summary.total));
+        return `<div class="trend-chart" role="img" aria-label="七类分类数量变化趋势">${rows.map(row=>{
+          const stack=classes.map(c=>`<span class="trend-segment" style="height:${row.summary.counts[c.id]/Math.max(1,row.summary.total)*100}%;background:${chartColors[c.id]}"></span>`).join('');
+          const height=Math.max(1,row.summary.total/max*197);
+          const tip=`${dateTime(row.start)} · 共 ${row.summary.total} 串`;
+          return `<div class="trend-column" tabindex="0" aria-label="${tip}"><div class="trend-tip">${tip}</div><div class="trend-bar" style="height:${height}px" title="${tip}">${stack}</div><div class="trend-label">${row.label}</div></div>`;
+        }).join('')}</div><div class="trend-legend">${classes.map(c=>`<span><i style="background:${chartColors[c.id]}"></i>${c.name}</span>`).join('')}</div>`;
+      }
+      function cameraDialog(){
+        if(!state.cameraOpen)return '';
+        return `<div class="camera-backdrop" data-action="camera-backdrop"><section class="camera-dialog" role="dialog" aria-modal="true" aria-label="摄像机实时画面"><div class="camera-dialog-head"><h2>摄像机实时画面</h2><button type="button" class="drawer-close" data-action="close-camera" aria-label="关闭画面">×</button></div><div class="camera-screen">${state.dashboardInterrupted?'<span class="camera-offline">摄像机离线，无法查看画面</span>':'<img src="assets/palm-bunch-CXev_nJe.jpg" alt="摄像机画面演示图"><span class="camera-overlay">画面演示 · 未接入实时视频流</span>'}</div><div class="camera-dialog-foot">${state.dashboardInterrupted?'请检查摄像机连接。':'正式接入后，此处显示摄像机实时视频。'}</div></section></div>`;
+      }
+      function renderDashboard(){
+        const current=bucket(state.dashboardNow,'shift'),today=records.filter(r=>r.at>=current.start&&r.at<=state.dashboardNow),summary=aggregate(today);
+        const bCount=zoneCount(summary.counts,'B'),shiftName=current.label.split(' · ')[1];
+        const zoneColors={A:'#87a873',B:'#c28a4e',C:'#549376'};
+        const zoneMarkup=zones.map(z=>{const count=zoneCount(summary.counts,z.id);return `<div class="zone-line"><span class="zone-label">${z.id} 区</span><div class="zone-track"><i style="width:${count/Math.max(1,summary.total)*100}%;background:${zoneColors[z.id]}"></i></div><span class="zone-figure">${number(count)}<small>${percent(count,summary.total)}</small></span></div>`;}).join('');
+        const recent=records.slice(0,5).map(r=>`<button type="button" class="recent-item" data-action="dashboard-record" data-record-id="${r.id}"><img src="assets/palm-bunch-CXev_nJe.jpg" alt="果串抓拍示例"><span class="recent-info"><strong>${r.id}</strong><span>${dateTimeSeconds(r.at)} · ${r.route?r.route+" 区":"去向待定"} · ${statusNames[r.status]}</span></span><span class="recent-class">${r.finalClass?.name||'识别失败'}<br>${r.confidence===null?'—':(r.confidence*100).toFixed(1)+'%'}</span></button>`).join('');
+        app.innerHTML=`<div class="layout dashboard"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top active" data-action="view" data-view="dashboard" aria-current="page">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item" data-action="view" data-view="period">周期汇总</button><button type="button" class="nav-item" data-action="view" data-view="batch">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top" data-action="view" data-view="records">检测记录</button><button type="button" class="nav-item nav-top" data-action="view" data-view="review">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">产线总览</div><h1>任务看板</h1></div></header><section class="surface live-head" aria-label="实时状态"><div class="live-main"><span class="live-pill ${state.dashboardInterrupted?'stale':state.dashboardPaused?'paused':''}">${state.dashboardInterrupted?'更新中断':state.dashboardPaused?'产线已暂停':'产线运行中'}</span><span class="live-title">当前${shiftName}</span><span class="live-sub">${dateTime(current.start)}–${dateTime(current.end)}</span></div><span class="live-time">最近更新 ${dateTimeSeconds(state.dashboardLastSuccess)}</span></section><section class="kpi-grid" aria-label="当前班次指标"><div class="surface kpi"><div class="kpi-label">检测总量</div><strong class="kpi-value">${number(summary.total)}</strong><span class="kpi-note">当前班次 · 含识别失败</span></div><div class="surface kpi warning"><div class="kpi-label">异常占比</div><strong class="kpi-value">${percent(bCount,summary.total)}</strong><span class="kpi-note">当前 B 区分类 ${number(bCount)} 串</span></div><div class="surface kpi warning"><button type="button" data-action="dashboard-filter" data-status="pending"><span class="kpi-label">待复核</span><strong class="kpi-value">${number(summary.pending)}</strong><span class="kpi-note">查看检测记录 →</span></button></div><div class="surface kpi error-kpi"><button type="button" data-action="dashboard-filter" data-status="failed"><span class="kpi-label">识别失败</span><strong class="kpi-value">${number(summary.failed)}</strong><span class="kpi-note">查看检测记录 →</span></button></div></section><div class="dashboard-main"><section class="surface dash-panel"><div class="dash-panel-head"><h2>分类变化趋势</h2><div class="trend-tabs" role="group" aria-label="趋势统计维度">${[['hour','按小时'],['shift','按班次'],['day','按日']].map(([id,label])=>`<button type="button" data-action="dashboard-grain" data-grain="${id}" class="${state.dashboardGrain===id?'active':''}" aria-pressed="${state.dashboardGrain===id}">${label}</button>`).join('')}</div></div>${dashboardTrend()}</section><section class="surface dash-panel"><div class="dash-panel-head"><h2>当前班次分类</h2></div>${zoneMarkup}<div class="class-grid">${classes.map(c=>`<div class="class-row"><span>${c.name}</span><strong>${number(summary.counts[c.id])} · ${percent(summary.counts[c.id],summary.total)}</strong></div>`).join('')}</div></section></div><div class="dashboard-bottom"><section class="surface dash-panel"><div class="dash-panel-head"><h2>最近检测结果</h2><button type="button" class="detail-link" data-action="view" data-view="records">查看全部 →</button></div><div class="recent-list">${recent}</div></section><section class="surface dash-panel equipment-panel"><div class="dash-panel-head"><h2>产线设备</h2></div><div class="equipment-preview"><button type="button" class="equipment-preview-main" data-action="open-camera" aria-label="查看摄像机画面">${state.dashboardInterrupted?'<span class="preview-offline">摄像机离线，暂无画面</span>':'<img src="assets/palm-bunch-CXev_nJe.jpg" alt="摄像机画面演示图"><span class="preview-badge">画面演示</span>'}<span class="preview-action">查看画面 →</span></button><div class="equipment-preview-caption"><strong>摄像机</strong><span class="preview-status ${state.dashboardInterrupted?'offline':''}">${state.dashboardInterrupted?'离线':'在线'}</span></div></div><div class="plc-control"><div class="plc-control-main"><strong>PLC · ${state.dashboardPaused?'已暂停':'运行中'}</strong><span>${state.dashboardPaused?'产线已暂停，可恢复运行':'产线运行控制'}</span></div><button type="button" class="pause-button ${state.dashboardPaused?'resume':''}" data-action="toggle-pause" ${state.dashboardInterrupted?'disabled title="更新中断，暂不可操作"':''}>${state.dashboardPaused?'恢复运行':'一键暂停'}</button></div><div class="demo-caption">演示数据 · 每 10 秒更新</div></section></div></main>${recordDetail(recordById.get(state.selectedRecordId))}${cameraDialog()}</div>`;
+      }
+      function dashboardRefresh(){
+        if(state.dashboardInterrupted)return;
+        state.dashboardTick++;
+        state.dashboardNow=new Date(state.dashboardNow.getTime()+10000);
+        state.dashboardLastSuccess=new Date(state.dashboardNow);
+        if(state.dashboardPaused){if(state.view==='dashboard')render();return;}
+        const index=state.dashboardTick,failed=index%17===0,cls=classes[(index*3)%classes.length];
+        const record={id:`PF-${dateKey(state.dashboardNow).replaceAll('-','')}-L${String(index).padStart(4,'0')}`,batchId:'PB-20261014-04',at:new Date(state.dashboardNow),status:failed?'failed':cls.zone==='B'?'pending':'recognized',originalClass:failed?null:cls,finalClass:failed?null:cls,route:failed?null:cls.zone,confidence:failed?null:0.78+(index%17)*0.01,reviewHistory:[]};
+        records.unshift(record);recordById.set(record.id,record);
+        if(state.view==='dashboard'&&!state.selectedRecordId)render();
+      }
+      function queueRows(){
+        const f=state.queueApplied,batch=f.batch.trim().toLowerCase();
+        return records.filter(r=>(r.status==='pending'||r.status==='failed')&&r.batchId.toLowerCase().includes(batch)&&(!f.date||dateKey(r.at)===f.date)&&(!f.type||r.status===f.type)).sort((a,b)=>b.at-a.at);
+      }
+      function syncQueueSelection(rows){
+        if(!rows.some(r=>r.id===state.queueSelectedId))state.queueSelectedId=rows[0]?.id||null;
+        if(state.queueLoadedId!==state.queueSelectedId){
+          const current=recordById.get(state.queueSelectedId);
+          state.queueLoadedId=state.queueSelectedId;
+          state.queueDraftClass=current?.status==='pending'?current.finalClass?.id||'':'';
+          state.queueNote='';state.queueError='';
+        }
+      }
+      function queueAdvance(previousRows,index){
+        const remaining=queueRows().filter(r=>!state.queueSkipped.has(r.id));
+        state.queueSelectedId=remaining[index]?.id||remaining[0]?.id||null;
+        state.queueLoadedId=null;
+        syncQueueSelection(remaining);
+      }
+      function renderReview(){
+        const all=queueRows(),rows=all.filter(r=>!state.queueSkipped.has(r.id));
+        syncQueueSelection(rows);
+        const current=recordById.get(state.queueSelectedId),f=state.queueDraft;
+        const pending=all.filter(r=>r.status==='pending').length,failed=all.length-pending;
+        const queueMarkup=rows.slice(0,state.queueLimit).map(r=>`<button type="button" class="queue-item ${current?.id===r.id?'active':''}" data-action="queue-select" data-record-id="${r.id}" aria-current="${current?.id===r.id?'true':'false'}"><span class="queue-item-top"><strong>${r.id}</strong><span class="status-pill status-${r.status}">${statusNames[r.status]}</span></span><span class="queue-item-meta">${dateTimeSeconds(r.at)} · ${r.batchId}</span><span class="queue-item-class">${r.finalClass?.name||'暂无识别分类'}</span></button>`).join('');
+        const empty=all.length===0?'<div class="queue-empty"><strong>当前条件下没有待处理记录</strong><span>可调整筛选条件。</span></div>':'<div class="queue-empty"><strong>本轮已浏览完</strong><span>跳过的记录仍在待处理队列中。</span><br><button type="button" class="secondary" data-action="queue-restart">重新查看已跳过</button></div>';
+        const decisions=current?`<div class="review-panel-head"><div><h2>${current.id}</h2><span>${dateTimeSeconds(current.at)} · ${current.batchId}</span></div><span class="status-pill status-${current.status}">${statusNames[current.status]}</span></div><div class="review-panel-content"><div><figure class="review-photo"><img src="assets/palm-bunch-CXev_nJe.jpg" alt="棕榈果串检测照片演示图"><figcaption>检测照片 · 演示图片</figcaption></figure><div class="review-facts"><div class="review-fact"><small>算法原始分类</small><strong>${current.originalClass?.name||'—'}</strong></div><div class="review-fact"><small>算法决定去向</small><strong>${current.route?current.route+' 区':'—'}</strong></div><div class="review-fact"><small>置信度</small><strong>${current.confidence===null?'—':(current.confidence*100).toFixed(1)+'%'}</strong></div><div class="review-fact"><small>所属批次</small><strong>${current.batchId}</strong></div></div></div><div class="review-decision"><h3>确认果串分类</h3><div class="review-original">算法判断<strong>${current.originalClass?.name||'识别失败，请人工选择分类'}</strong></div>${zones.map(z=>`<div class="review-zone-title">${z.id} 区</div><div class="review-choices">${classes.filter(c=>c.zone===z.id).map(c=>`<button type="button" class="review-choice ${state.queueDraftClass===c.id?'selected':''}" data-action="queue-class" data-class-id="${c.id}" aria-pressed="${state.queueDraftClass===c.id}">${c.name}</button>`).join('')}</div>`).join('')}<label class="review-note-field" for="queue-note">复核备注（选填）<textarea id="queue-note" placeholder="可填写判断依据">${escapeHtml(state.queueNote)}</textarea></label>${state.queueError?`<p class="workbench-error" role="alert">${escapeHtml(state.queueError)}</p>`:''}<div class="review-work-actions"><button type="button" class="secondary" data-action="queue-skip">跳过</button><button type="button" class="primary" data-action="queue-confirm">提交复核并处理下一条</button></div></div></div>`:'<div class="review-idle">请选择一条待处理记录。</div>';
+        app.innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top" data-action="view" data-view="dashboard">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item" data-action="view" data-view="period">周期汇总</button><button type="button" class="nav-item" data-action="view" data-view="batch">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top" data-action="view" data-view="records">检测记录</button><button type="button" class="nav-item nav-top active" data-action="view" data-view="review" aria-current="page">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">检测复核</div><h1>复核工作台</h1></div></header><section class="surface filter-panel"><h2 class="section-kicker">筛选条件</h2><div class="review-filter"><div><label class="field-label" for="queue-batch">批次号</label><input id="queue-batch" type="search" placeholder="输入批次号" value="${escapeHtml(f.batch)}"></div><div><label class="field-label" for="queue-date">检测日期</label><input id="queue-date" type="date" value="${escapeHtml(f.date)}"></div><div><label class="field-label" for="queue-type">队列类型</label><select id="queue-type"><option value="">全部类型</option><option value="pending" ${f.type==='pending'?'selected':''}>B 区待复核</option><option value="failed" ${f.type==='failed'?'selected':''}>识别失败</option></select></div><div class="action-row"><button type="button" class="primary" data-action="queue-query">查询</button><button type="button" class="secondary" data-action="queue-reset">重置</button></div></div></section><div class="workbench-grid"><section class="surface queue-panel"><div class="queue-head"><h2>待处理队列 · ${number(all.length)}</h2><span>B 区待复核 ${number(pending)} · 识别失败 ${number(failed)} · 由近到远</span></div><div class="queue-list">${rows.length?queueMarkup:empty}${rows.length>state.queueLimit?`<button type="button" class="queue-more" data-action="queue-more">加载更多（剩余 ${number(rows.length-state.queueLimit)} 条）</button>`:''}</div></section><section class="surface review-panel">${decisions}</section></div></main></div>`;
+      }
+      function settingsNav(){
+        return `<div class="nav-parent">系统设置</div><button type="button" class="nav-item ${state.view==='roles'?'active':''}" data-action="view" data-view="roles" aria-current="${state.view==='roles'?'page':'false'}">角色管理</button><button type="button" class="nav-item ${state.view==='accounts'?'active':''}" data-action="view" data-view="accounts" aria-current="${state.view==='accounts'?'page':'false'}">账号管理</button>`;
+      }
+      function openSettingsModal(kind,id){
+        state.settingsModal=kind;state.settingsError='';
+        if(kind==='role-new')state.settingsDraft={name:'',description:'',menus:[]};
+        if(kind==='role-edit'){const role=roles.find(r=>r.id===id);if(!role)return;state.settingsDraft={id:role.id,name:role.name,description:role.description,menus:[...role.menus]};}
+        if(kind==='account-new')state.settingsDraft={id:'',name:'',password:'',roleIds:[]};
+        if(kind==='account-edit'){const account=accounts.find(a=>a.id===id&&!a.builtin);if(!account)return;state.settingsDraft={id:account.id,name:account.name,roleIds:[...account.roleIds]};}
+        if(kind==='account-password'){const account=accounts.find(a=>a.id===id&&!a.builtin);if(!account)return;state.settingsDraft={id:account.id,password:''};}
+        render();
+      }
+      function settingsDialog(){
+        if(!state.settingsModal)return '';
+        const mode=state.settingsModal,d=state.settingsDraft;
+        const isRole=mode.startsWith('role-'),isNew=mode.endsWith('-new');
+        const title={ 'role-new':'新增角色','role-edit':'编辑角色','account-new':'新增账号','account-edit':'编辑账号','account-password':'重置密码'}[mode];
+        let body='';
+        if(isRole){
+          body=`<div class="settings-form-grid"><div class="settings-form-field wide"><label for="settings-name">角色名称</label><input id="settings-name" value="${escapeHtml(d.name)}" placeholder="请输入角色名称"></div><div class="settings-form-field wide"><label for="settings-description">角色说明（选填）</label><textarea id="settings-description" placeholder="简要说明该角色的职责">${escapeHtml(d.description)}</textarea></div></div><div class="settings-check-head">可访问菜单</div><div class="settings-check-grid">${permissionMenus.map(menu=>`<label class="settings-check"><input type="checkbox" data-setting-menu="${menu.id}" ${d.menus.includes(menu.id)?'checked':''}>${menu.name}</label>`).join('')}</div>`;
+        }else if(mode==='account-password'){
+          body=`<div class="settings-form-grid"><div class="settings-form-field wide"><label>账号</label><input value="${escapeHtml(d.id)}" disabled></div><div class="settings-form-field wide"><label for="settings-password">新密码</label><input id="settings-password" type="password" autocomplete="new-password" value="${escapeHtml(d.password||'')}" placeholder="请输入新密码"></div></div>`;
+        }else{
+          body=`<div class="settings-form-grid"><div class="settings-form-field"><label for="settings-id">登录账号</label><input id="settings-id" value="${escapeHtml(d.id)}" placeholder="请输入登录账号" ${isNew?'':'disabled'}></div><div class="settings-form-field"><label for="settings-name">姓名</label><input id="settings-name" value="${escapeHtml(d.name)}" placeholder="请输入姓名"></div>${isNew?`<div class="settings-form-field wide"><label for="settings-password">初始密码</label><input id="settings-password" type="password" autocomplete="new-password" value="${escapeHtml(d.password||'')}" placeholder="请输入初始密码"></div>`:''}</div><div class="settings-check-head">分配角色（可多选）</div><div class="settings-check-grid">${roles.map(role=>`<label class="settings-check"><input type="checkbox" data-setting-role="${role.id}" ${d.roleIds.includes(role.id)?'checked':''}>${escapeHtml(role.name)} ${role.enabled?'':'<small>已停用</small>'}</label>`).join('')}</div>`;
+        }
+        return `<div class="settings-dialog-backdrop" data-action="settings-backdrop"><section class="settings-dialog" role="dialog" aria-modal="true" aria-label="${title}"><div class="settings-dialog-head"><h2>${title}</h2><button type="button" class="drawer-close" data-action="settings-close" aria-label="关闭">×</button></div><div class="settings-dialog-body">${body}${state.settingsError?`<p class="settings-form-error" role="alert">${escapeHtml(state.settingsError)}</p>`:''}<div class="settings-dialog-actions"><button type="button" class="secondary" data-action="settings-close">取消</button><button type="button" class="primary" data-action="settings-save">保存</button></div></div></section></div>`;
+      }
+      function saveSettings(){
+        const mode=state.settingsModal,d=state.settingsDraft;
+        if(!mode||!d)return;
+        if(mode.startsWith('role-')){
+          const name=d.name.trim();
+          if(!name){state.settingsError='请输入角色名称。';render();return;}
+          if(roles.some(r=>r.name.toLowerCase()===name.toLowerCase()&&r.id!==d.id)){state.settingsError='角色名称已存在。';render();return;}
+          if(!d.menus.length){state.settingsError='请至少选择一个可访问菜单。';render();return;}
+          if(mode==='role-new')roles.push({id:`role-${Date.now()}-${roles.length}`,name,description:d.description.trim(),enabled:true,menus:[...d.menus]});
+          else{const role=roles.find(r=>r.id===d.id);if(role){role.name=name;role.description=d.description.trim();role.menus=[...d.menus];}}
+        }else if(mode==='account-password'){
+          if(!d.password){state.settingsError='请输入新密码。';render();return;}
+        }else{
+          const id=d.id.trim(),name=d.name.trim();
+          if(!id||!name){state.settingsError='请填写登录账号和姓名。';render();return;}
+          if(!d.roleIds.length){state.settingsError='请至少分配一个角色。';render();return;}
+          if(mode==='account-new'){
+            if(accounts.some(a=>a.id.toLowerCase()===id.toLowerCase())){state.settingsError='登录账号已存在。';render();return;}
+            if(!d.password){state.settingsError='请输入初始密码。';render();return;}
+            accounts.push({id,name,builtin:false,enabled:true,roleIds:[...d.roleIds]});
+          }else{const account=accounts.find(a=>a.id===id&&!a.builtin);if(account){account.name=name;account.roleIds=[...d.roleIds];}}
+        }
+        state.settingsModal=null;state.settingsDraft=null;state.settingsError='';render();showToast('已保存（仅当前页面会话）。');
+      }
+      function renderSettings(){
+        const isRole=state.view==='roles',title=isRole?'角色管理':'账号管理';
+        const roleRows=roles.map(role=>`<tr><td><span class="setting-name">${escapeHtml(role.name)}</span><span class="subline">${escapeHtml(role.description||'—')}</span></td><td><span class="settings-tag ${role.enabled?'':'disabled'}">${role.enabled?'启用':'停用'}</span></td><td>${accounts.filter(a=>a.roleIds.includes(role.id)).length}</td><td><div class="settings-menu-list">${role.menus.map(id=>permissionMenus.find(m=>m.id===id)?.name||'').filter(Boolean).join('、')}</div></td><td><div class="actions"><button type="button" data-action="settings-open" data-kind="role-edit" data-id="${role.id}">编辑</button><button type="button" class="${role.enabled?'warning-action':''}" data-action="role-toggle" data-id="${role.id}">${role.enabled?'停用':'启用'}</button></div></td></tr>`).join('');
+        const query=state.accountSearch.trim().toLowerCase();
+        const visibleAccounts=accounts.filter(a=>!query||a.id.toLowerCase().includes(query)||a.name.toLowerCase().includes(query));
+        const accountRows=visibleAccounts.map(a=>`<tr><td><span class="setting-name">${escapeHtml(a.id)}</span>${a.builtin?'<span class="subline">内置管理员账号</span>':''}</td><td>${escapeHtml(a.name)}</td><td><div class="settings-menu-list">${a.builtin?'<span class="settings-tag protected">全部菜单 · 内置</span>':a.roleIds.map(id=>{const r=roles.find(role=>role.id===id);return r?`${escapeHtml(r.name)}${r.enabled?'':'（已停用）'}`:'';}).filter(Boolean).join('、')||'—'}</div></td><td><span class="settings-tag ${a.enabled?'':'disabled'}">${a.enabled?'启用':'停用'}</span></td><td>${a.builtin?'<span class="settings-tag protected">不可编辑</span>':`<div class="actions"><button type="button" data-action="settings-open" data-kind="account-edit" data-id="${a.id}">编辑</button><button type="button" data-action="settings-open" data-kind="account-password" data-id="${a.id}">重置密码</button><button type="button" class="${a.enabled?'warning-action':''}" data-action="account-toggle" data-id="${a.id}">${a.enabled?'停用':'启用'}</button></div>`}</td></tr>`).join('');
+        const content=isRole?`<div class="settings-toolbar"><p>按页面配置角色可访问的菜单</p><button type="button" class="primary" data-action="settings-open" data-kind="role-new">新增角色</button></div><div class="settings-table-wrap"><table class="settings-table"><thead><tr><th>角色</th><th>状态</th><th>关联账号</th><th>可访问菜单</th><th>操作</th></tr></thead><tbody>${roleRows}</tbody></table></div>`:`<div class="settings-toolbar"><div class="settings-tools"><input id="account-search" type="search" placeholder="搜索账号或姓名" aria-label="搜索账号或姓名" value="${escapeHtml(state.accountSearchDraft)}"><button type="button" class="secondary" data-action="account-search">搜索</button></div><button type="button" class="primary" data-action="settings-open" data-kind="account-new">新增账号</button></div><div class="settings-table-wrap"><table class="settings-table"><thead><tr><th>登录账号</th><th>姓名</th><th>关联角色</th><th>状态</th><th>操作</th></tr></thead><tbody>${accountRows||'<tr><td colspan="5"><div class="settings-empty">没有符合条件的账号</div></td></tr>'}</tbody></table></div>`;
+        app.innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top" data-action="view" data-view="dashboard">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item" data-action="view" data-view="period">周期汇总</button><button type="button" class="nav-item" data-action="view" data-view="batch">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top" data-action="view" data-view="records">检测记录</button><button type="button" class="nav-item nav-top" data-action="view" data-view="review">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">系统设置 / ${title}</div><h1>${title}</h1></div></header><section class="surface settings-panel">${content}</section></main>${settingsDialog()}</div>`;
+      }
+      function renderRecords(){
+        const f=state.recordDraft,rows=recordRows();
+        state.page=Math.min(state.page,Math.max(1,Math.ceil(rows.length/pageSize)));
+        app.innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top" data-action="view" data-view="dashboard">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item" data-action="view" data-view="period">周期汇总</button><button type="button" class="nav-item" data-action="view" data-view="batch">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top active" data-action="view" data-view="records" aria-current="page">检测记录</button><button type="button" class="nav-item nav-top" data-action="view" data-view="review">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">检测记录</div><h1>检测记录</h1></div></header><section class="surface filter-panel" aria-label="检测记录筛选"><h2 class="section-kicker">筛选条件</h2><div class="record-filter-grid"><div class="record-field"><label class="field-label" for="record-id">果串编号</label><input id="record-id" type="search" placeholder="请输入编号" value="${escapeHtml(f.id)}"></div><div class="record-field"><label class="field-label" for="record-batch">批次号</label><input id="record-batch" type="search" placeholder="请输入批次号" value="${escapeHtml(f.batch)}"></div><div class="record-field record-time"><label class="field-label" for="record-start">检测时间</label><div class="date-range"><input id="record-start" type="datetime-local" value="${escapeHtml(f.start)}" aria-label="检测开始时间"><span class="range-divider">至</span><input id="record-end" type="datetime-local" value="${escapeHtml(f.end)}" aria-label="检测结束时间"></div></div><div class="record-field"><label class="field-label" for="record-status">状态</label><select id="record-status"><option value="">全部状态</option>${Object.entries(statusNames).map(([id,label])=>`<option value="${id}" ${f.status===id?'selected':''}>${label}</option>`).join('')}</select></div><div class="record-field"><label class="field-label" for="record-class">分类</label><select id="record-class"><option value="">全部分类</option>${classes.map(c=>`<option value="${c.id}" ${f.classification===c.id?'selected':''}>${c.name}</option>`).join('')}</select></div><div class="action-row"><button type="button" class="primary" data-action="record-query">查询</button><button type="button" class="secondary" data-action="record-reset">重置</button></div></div><p class="error ${state.error?'visible':''}" role="alert">${escapeHtml(state.error)}</p></section><section class="surface content-panel"><div class="table-toolbar"><button type="button" class="secondary export" data-action="export" aria-label="导出当前列表（演示入口）"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg>导出数据</button></div>${recordTable(rows)}${pagination(rows.length)}</section></main>${recordDetail(recordById.get(state.selectedRecordId))}</div>`;
+      }
+      function pagination(total){
+        const pages=Math.max(1,Math.ceil(total/pageSize));
+        if(state.page>pages)state.page=pages;
+        const from=total?(state.page-1)*pageSize+1:0,to=Math.min(state.page*pageSize,total);
+        return `<div class="pagination"><span>显示 ${from}–${to} 条，共 ${number(total)} 条</span><div class="pager"><button type="button" data-action="prev" ${state.page===1?'disabled':''}>上一页</button><span>第 ${state.page} / ${pages} 页</span><button type="button" data-action="next" ${state.page===pages?'disabled':''}>下一页</button></div></div>`;
+      }
+      function reportNav(){return `<button type="button" class="nav-item ${state.view==='reports'?'active':''}" data-action="view" data-view="reports" aria-current="${state.view==='reports'?'page':'false'}">每日报告</button>`;}
+      function reportRows(){
+        const days=[...new Set(reportVersions.map(r=>r.day))].filter(day=>day>=state.reportStart&&day<=state.reportEnd).sort((a,b)=>b.localeCompare(a));
+        return days.map(day=>{const versions=reportVersions.filter(r=>r.day===day).sort((a,b)=>b.version-a.version);return {day,latest:versions[0],versions};});
+      }
+      function reportPaper(report){
+        const classified=classes.reduce((sum,c)=>sum+report.counts[c.id],0),bClass=classes.filter(c=>c.zone==='B').reduce((sum,c)=>sum+report.counts[c.id],0);
+        const max=Math.max(1,...report.hourly),hourLabel=i=>pad((i+4)%24);
+        return `<article class="report-paper report-print-area" aria-label="每日报告 PDF 预览"><div class="report-paper-kicker">PALM FRUIT SORTING · DAILY REPORT</div><h2>棕榈果分拣每日报告</h2><div class="report-period">生产日 ${report.day} · ${dateTime(report.range.start)}–${dateTime(report.range.end)}</div><div class="report-paper-meta"><span>报告版本 V${report.version} · ${report.kind==='auto'?'定时生成':'手工重新生成'}</span><span>生成时间 ${dateTime(report.createdAt)}</span></div><div class="report-metrics"><div class="report-metric"><span>新增批次数</span><strong>${number(report.batchCount)}</strong></div><div class="report-metric"><span>检测果串总数</span><strong>${number(report.total)}</strong></div><div class="report-metric"><span>分类异常占比</span><strong>${percent(bClass,report.total)}</strong></div><div class="report-metric"><span>识别失败</span><strong>${number(report.failed)}</strong></div></div><h3>分拣去向（演示）</h3><table><thead><tr><th>去向</th><th>数量</th><th>占检测总量</th></tr></thead><tbody>${['A','B','C'].map(z=>`<tr><td>${z} 区</td><td>${number(report.routes[z])}</td><td>${percent(report.routes[z],report.total)}</td></tr>`).join('')}<tr><td>无去向</td><td>${number(report.total-report.routes.A-report.routes.B-report.routes.C)}</td><td>${percent(report.total-report.routes.A-report.routes.B-report.routes.C,report.total)}</td></tr></tbody></table><h3>最新分类结果</h3><table><thead><tr><th>分区</th><th>分类</th><th>数量</th><th>占检测总量</th></tr></thead><tbody>${classes.map(c=>`<tr><td>${c.zone} 区</td><td>${c.name}</td><td>${number(report.counts[c.id])}</td><td>${percent(report.counts[c.id],report.total)}</td></tr>`).join('')}<tr><td>—</td><td>暂无分类</td><td>${number(report.total-classified)}</td><td>${percent(report.total-classified,report.total)}</td></tr></tbody></table><p class="report-note">分类结果采用本版本生成时的最新复核结论。当前演示数据仅有算法决定去向，正式报告中的实际去向需接入设备执行反馈。</p><h3>班次与小时变化</h3><div class="report-shifts">${['早班 04:00–12:00','午班 12:00–20:00','晚班 20:00–次日 04:00'].map((name,i)=>`<div>${name}<strong>${number(report.shifts[i])}</strong></div>`).join('')}</div><div class="report-chart" role="img" aria-label="每小时检测量">${report.hourly.map((n,i)=>`<div class="report-chart-col" title="${hourLabel(i)}:00 · ${number(n)} 串"><div class="report-chart-bar" style="height:${Math.max(n?2:0,n/max*92)}px"></div><div class="report-chart-label">${i%3===0?hourLabel(i):''}</div></div>`).join('')}</div><h3>复核情况</h3><table><thead><tr><th>已复核</th><th>待复核（含识别失败）</th><th>其中：识别失败</th></tr></thead><tbody><tr><td>${number(report.reviewed)}</td><td>${number(report.pending)}</td><td>${number(report.failed)}</td></tr></tbody></table><h3>逐批次摘要</h3><table><thead><tr><th>批次编号</th><th>开始／结束时间</th><th>果串总数</th><th>A 区</th><th>B 区</th><th>C 区</th></tr></thead><tbody>${report.batches.map(b=>`<tr><td>${b.id}</td><td>${dateTime(b.start)}<br>${b.end?dateTime(b.end):'—'}</td><td>${number(b.total)}</td><td>${number(b.zone.A)}</td><td>${number(b.zone.B)}</td><td>${number(b.zone.C)}</td></tr>`).join('')}</tbody></table><p class="report-note">新增批次数按批次开始时间计算。批次表列出本生产日内有检测记录的批次，每行只统计本生产日的果串；A/B/C 数量在演示中按算法决定去向统计，无去向果串计入总数。</p><div class="report-footer">报告编号 ${report.day.replaceAll('-','')}-V${report.version} · 演示数据</div></article>`;
+      }
+      function reportPreview(){
+        const report=reportVersions.find(r=>r.id===state.reportOpenId);if(!report)return '';
+        return `<div class="report-modal-backdrop" data-action="report-backdrop"><div class="report-modal" role="dialog" aria-modal="true" aria-label="每日报告预览"><div class="report-modal-head"><div><strong>${report.day} 每日报告 · V${report.version}</strong><span>PDF 版式预览 · 导出时请在浏览器中选择“保存为 PDF”</span></div><div class="report-modal-actions"><button type="button" class="primary" data-action="report-print">导出 PDF</button><button type="button" class="secondary" data-action="report-close">关闭</button></div></div><div class="report-modal-scroll">${reportPaper(report)}</div></div></div>`;
+      }
+      function renderReports(){
+        const rows=reportRows();state.page=Math.min(state.page,Math.max(1,Math.ceil(rows.length/8)));
+        const visible=rows.slice((state.page-1)*8,state.page*8);
+        const tableRows=visible.map(({day,latest,versions})=>`<tr><td><span class="report-date">${day}</span><span class="report-sub">04:00–次日 04:00</span></td><td>${number(latest.batchCount)}</td><td>${number(latest.total)}</td><td><span class="report-version-badge">V${latest.version} · 最新版</span>${versions.length>1?`<button type="button" class="report-version-toggle" data-action="report-history" data-day="${day}">${state.reportExpanded.has(day)?'收起历史版本':`查看历史版本 (${versions.length-1})`}</button>`:''}</td><td>${dateTime(latest.createdAt)}<span class="report-sub">${latest.kind==='auto'?'定时生成':'手工重新生成'}</span></td><td><div class="report-actions"><button type="button" data-action="report-preview" data-id="${latest.id}">预览</button><button type="button" data-action="report-download" data-id="${latest.id}">导出 PDF</button><button type="button" class="regenerate" data-action="report-regenerate" data-day="${day}">重新生成</button></div></td></tr>${state.reportExpanded.has(day)?versions.slice(1).map(old=>`<tr class="report-history-row"><td>历史版本</td><td colspan="2">${dateTime(old.createdAt)} · ${old.kind==='auto'?'定时生成':'手工重新生成'}</td><td><span class="report-version-badge old">V${old.version}</span></td><td></td><td><div class="report-actions"><button type="button" data-action="report-preview" data-id="${old.id}">预览</button><button type="button" data-action="report-download" data-id="${old.id}">导出 PDF</button></div></td></tr>`).join(''):''}`).join('');
+        app.innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top" data-action="view" data-view="dashboard">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item" data-action="view" data-view="period">周期汇总</button><button type="button" class="nav-item" data-action="view" data-view="batch">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top" data-action="view" data-view="records">检测记录</button><button type="button" class="nav-item nav-top" data-action="view" data-view="review">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">数据统计 / 每日报告</div><h1>每日报告</h1></div></header><section class="surface filter-panel"><h2 class="section-kicker">筛选条件</h2><div class="report-filter"><div><label class="field-label" for="report-start">生产日</label><input id="report-start" type="date" value="${state.reportDraftStart}" aria-label="开始生产日"></div><span class="range-divider">至</span><div><label class="field-label" for="report-end">&nbsp;</label><input id="report-end" type="date" value="${state.reportDraftEnd}" aria-label="结束生产日"></div><div class="action-row"><button type="button" class="primary" data-action="report-query">查询</button><button type="button" class="secondary" data-action="report-reset">重置</button></div></div><p class="error ${state.error?'visible':''}" role="alert">${escapeHtml(state.error)}</p></section><section class="surface content-panel"><div class="report-intro"><div><strong>已生成报告</strong><span>每日 08:00 自动生成，支持按需重新生成并保留历史版本</span></div><span class="report-demo-tag">演示数据</span></div><div class="report-table-wrap"><table class="report-table"><thead><tr><th>生产日</th><th>新增批次数</th><th>果串总数</th><th>报告版本</th><th>生成时间</th><th>操作</th></tr></thead><tbody>${tableRows||'<tr><td colspan="6"><div class="empty-state"><strong>没有符合条件的报告</strong><span>请调整生产日范围后查询。</span></div></td></tr>'}</tbody></table></div>${pagination(rows.length)}</section></main>${reportPreview()}</div>`;
+      }
+      function renderCore(){
+        if(state.view==='dashboard'){renderDashboard();return;}
+        if(state.view==='review'){renderReview();return;}
+        if(state.view==='roles'||state.view==='accounts'){renderSettings();return;}
+        if(state.view==='records'){renderRecords();return;}
+        if(state.view==='reports'){renderReports();return;}
+        const rows=state.view==='period'?periodRows():batchRows();
+        const title=state.view==='period'?'周期汇总':'批次详情';
+        app.innerHTML=`<div class="layout"><aside class="sidebar"><div class="brand">棕榈果分拣系统</div><nav aria-label="主菜单"><button type="button" class="nav-item nav-top" data-action="view" data-view="dashboard">任务看板</button><div class="nav-parent">数据统计</div><button type="button" class="nav-item ${state.view==='period'?'active':''}" data-action="view" data-view="period" aria-current="${state.view==='period'?'page':'false'}">周期汇总</button><button type="button" class="nav-item ${state.view==='batch'?'active':''}" data-action="view" data-view="batch" aria-current="${state.view==='batch'?'page':'false'}">批次详情</button>${reportNav()}<button type="button" class="nav-item nav-top" data-action="view" data-view="records">检测记录</button><button type="button" class="nav-item nav-top" data-action="view" data-view="review">复核工作台</button>${settingsNav()}</nav></aside><main class="shell"><header class="masthead"><div><div class="eyebrow">数据统计 / ${title}</div><h1>${title}</h1></div></header>
+          <section class="surface filter-panel" aria-label="统计条件"><h2 class="section-kicker">筛选条件</h2><div class="filter-layout">${state.view==='period'?`<div class="filter-block grain-block"><label class="field-label" for="grain-select">统计维度</label><select id="grain-select" class="grain-select"><option value="hour" ${state.grain==='hour'?'selected':''}>按小时</option><option value="shift" ${state.grain==='shift'?'selected':''}>按班次</option><option value="day" ${state.grain==='day'?'selected':''}>按日</option></select></div>`:''}<div class="filter-block time-block"><label class="field-label" for="range-start">时间范围</label><div class="date-range"><input id="range-start" type="datetime-local" value="${escapeHtml(state.draftStart)}" aria-label="开始时间"><span class="range-divider">至</span><input id="range-end" type="datetime-local" value="${escapeHtml(state.draftEnd)}" aria-label="结束时间"></div></div><div class="action-row"><button type="button" class="primary" data-action="query">查询</button><button type="button" class="secondary" data-action="reset">重置</button></div></div><p class="error ${state.error?'visible':''}" role="alert">${escapeHtml(state.error)}</p></section>
+          <section class="surface content-panel"><div class="table-toolbar">${state.view==='period'&&state.grain==='shift'?`<div class="shift-schedule"><span><b>早班</b> 04:00–12:00</span><span><b>午班</b> 12:00–20:00</span><span><b>晚班</b> 20:00–次日 04:00</span></div>`:''}${state.view==='batch'?`<div class="batch-search"><input id="batch-query" type="search" placeholder="搜索批次编号" aria-label="搜索批次编号" value="${escapeHtml(state.batchQuery)}"><button type="button" class="secondary" data-action="batch-query">搜索</button></div>`:''}<button type="button" class="secondary export" data-action="export" aria-label="导出当前列表（演示入口）"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 17v3h16v-3"/></svg>导出数据</button></div>${state.view==='period'?periodTable(rows):batchTable(rows)}${pagination(rows.length)}</section></main></div>`;
+      }
+      function render(){renderCore();applyLanguage();}
+      function applyQuery(){
+        const start=new Date(state.draftStart).getTime(),end=new Date(state.draftEnd).getTime();
+        if(!Number.isFinite(start)||!Number.isFinite(end)){state.error='请选择有效的开始和结束时间。';render();return;}
+        if(start>end){state.error='结束时间不能早于开始时间。';render();return;}
+        state.start=state.draftStart;state.end=state.draftEnd;state.error='';state.page=1;render();
+      }
+      function applyRecordQuery(){
+        const start=new Date(state.recordDraft.start).getTime(),end=new Date(state.recordDraft.end).getTime();
+        if(!Number.isFinite(start)||!Number.isFinite(end)){state.error='请选择有效的检测起止时间。';render();return;}
+        if(start>end){state.error='结束时间不能早于开始时间。';render();return;}
+        state.recordApplied={...state.recordDraft};state.error='';state.page=1;render();
+      }
+      function startReview(recordId){
+        const record=recordById.get(recordId);
+        if(!record)return;
+        state.selectedRecordId=recordId;state.reviewMode=true;
+        state.reviewDraftClass=record.finalClass?.id||'';state.reviewDraftNote='';state.reviewError='';render();
+        if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>document.getElementById('review-class')?.focus());
+      }
+      function confirmReview(){
+        const record=recordById.get(state.selectedRecordId);
+        const selected=classes.find(c=>c.id===state.reviewDraftClass);
+        if(!record)return;
+        if(!selected){state.reviewError='请选择确认后的分类。';render();if(typeof requestAnimationFrame==='function')requestAnimationFrame(()=>document.getElementById('review-class')?.focus());return;}
+        record.reviewHistory.push({beforeId:record.finalClass?.id||null,afterId:selected.id,at:new Date(),note:state.reviewDraftNote.trim()});
+        record.finalClass=selected;record.status='reviewed';
+        state.reviewMode=false;state.reviewError='';render();showToast('复核结果已更新。');
+      }
+      app.addEventListener('input',event=>{
+        if(event.target.id==='account-search')state.accountSearchDraft=event.target.value;
+        if(state.settingsDraft){
+          const fields={'settings-id':'id','settings-name':'name','settings-description':'description','settings-password':'password'};
+          if(fields[event.target.id])state.settingsDraft[fields[event.target.id]]=event.target.value;
+        }
+        if(event.target.id==='range-start')state.draftStart=event.target.value;
+        if(event.target.id==='range-end')state.draftEnd=event.target.value;
+        if(event.target.id==='report-start')state.reportDraftStart=event.target.value;
+        if(event.target.id==='report-end')state.reportDraftEnd=event.target.value;
+        if(event.target.id==='batch-query')state.batchQuery=event.target.value;
+        const fields={'record-id':'id','record-batch':'batch','record-start':'start','record-end':'end'};
+        if(fields[event.target.id])state.recordDraft[fields[event.target.id]]=event.target.value;
+        if(event.target.id==='review-note')state.reviewDraftNote=event.target.value;
+        if(event.target.id==='queue-batch')state.queueDraft.batch=event.target.value;
+        if(event.target.id==='queue-date')state.queueDraft.date=event.target.value;
+        if(event.target.id==='queue-note')state.queueNote=event.target.value;
+      });
+      app.addEventListener('change',event=>{
+        if(state.settingsDraft&&event.target.dataset.settingMenu){
+          const id=event.target.dataset.settingMenu,menus=state.settingsDraft.menus;
+          if(event.target.checked&&!menus.includes(id))menus.push(id);
+          if(!event.target.checked)state.settingsDraft.menus=menus.filter(item=>item!==id);
+        }
+        if(state.settingsDraft&&event.target.dataset.settingRole){
+          const id=event.target.dataset.settingRole,roleIds=state.settingsDraft.roleIds;
+          if(event.target.checked&&!roleIds.includes(id))roleIds.push(id);
+          if(!event.target.checked)state.settingsDraft.roleIds=roleIds.filter(item=>item!==id);
+        }
+        if(event.target.id==='grain-select'){state.grain=event.target.value;state.page=1;render();}
+        if(event.target.id==='record-status')state.recordDraft.status=event.target.value;
+        if(event.target.id==='record-class')state.recordDraft.classification=event.target.value;
+        if(event.target.id==='review-class')state.reviewDraftClass=event.target.value;
+        if(event.target.id==='queue-type')state.queueDraft.type=event.target.value;
+      });
+      app.addEventListener('keydown',event=>{
+        if(event.key==='Escape'&&state.settingsModal){state.settingsModal=null;state.settingsDraft=null;render();return;}
+        if(event.key==='Escape'&&state.cameraOpen){state.cameraOpen=false;render();return;}
+        if(event.key==='Escape'&&state.reportOpenId){state.reportOpenId=null;render();return;}
+        if(event.key==='Escape'&&state.selectedRecordId){state.selectedRecordId=null;state.reviewMode=false;render();return;}
+        if(event.key==='Enter'&&event.target.id==='batch-query'){
+          state.appliedBatchQuery=state.batchQuery;state.page=1;render();
+        }
+        if(event.key==='Enter'&&['record-id','record-batch'].includes(event.target.id))applyRecordQuery();
+        if(event.key==='Enter'&&event.target.id==='queue-batch'){state.queueApplied={...state.queueDraft};state.queueSkipped.clear();state.queueSelectedId=null;state.queueLimit=40;render();}
+        if(event.key==='Enter'&&event.target.id==='account-search'){state.accountSearch=state.accountSearchDraft;render();}
+      });
+      app.addEventListener('click',event=>{
+        const control=event.target.closest('[data-action]');if(!control)return;
+        const action=control.dataset.action;
+        if(action==='language'){state.lang=control.dataset.lang==='en'?'en':'zh';try{localStorage.setItem('palm-sort-language',state.lang);}catch{}render();return;}
+        if(action==='report-query'){if(!state.reportDraftStart||!state.reportDraftEnd||state.reportDraftStart>state.reportDraftEnd){state.error='请选择有效的生产日范围。';render();return;}state.reportStart=state.reportDraftStart;state.reportEnd=state.reportDraftEnd;state.error='';state.page=1;render();return;}
+        if(action==='report-reset'){state.reportDraftStart='2026-10-08';state.reportDraftEnd='2026-10-13';state.reportStart=state.reportDraftStart;state.reportEnd=state.reportDraftEnd;state.page=1;state.error='';render();return;}
+        if(action==='report-history'){const day=control.dataset.day;if(state.reportExpanded.has(day))state.reportExpanded.delete(day);else state.reportExpanded.add(day);render();return;}
+        if(action==='report-preview'||action==='report-download'){state.reportOpenId=control.dataset.id;render();if(action==='report-download'&&typeof window!=='undefined')requestAnimationFrame(()=>window.print());return;}
+        if(action==='report-print'){if(typeof window!=='undefined')window.print();return;}
+        if(action==='report-close'){state.reportOpenId=null;render();return;}
+        if(action==='report-backdrop'){if(event.target===control){state.reportOpenId=null;render();}return;}
+        if(action==='report-regenerate'){const day=control.dataset.day,old=reportVersions.filter(r=>r.day===day),version=Math.max(...old.map(r=>r.version))+1;reportVersions.push(snapshotReport(day,new Date(),version,'manual'));state.reportExpanded.add(day);render();showToast('已生成新版本，历史版本已保留。');return;}
+        if(action==='settings-open'){openSettingsModal(control.dataset.kind,control.dataset.id);return;}
+        if(action==='settings-close'){state.settingsModal=null;state.settingsDraft=null;state.settingsError='';render();return;}
+        if(action==='settings-backdrop'){if(event.target===control){state.settingsModal=null;state.settingsDraft=null;state.settingsError='';render();}return;}
+        if(action==='settings-save'){saveSettings();return;}
+        if(action==='role-toggle'){const role=roles.find(r=>r.id===control.dataset.id);if(role){role.enabled=!role.enabled;render();showToast(role.enabled?'角色已启用。':'角色已停用。');}return;}
+        if(action==='account-toggle'){const account=accounts.find(a=>a.id===control.dataset.id&&!a.builtin);if(account){account.enabled=!account.enabled;render();showToast(account.enabled?'账号已启用。':'账号已停用。');}return;}
+        if(action==='account-search'){state.accountSearch=state.accountSearchDraft;render();return;}
+        if(action==='queue-query'){state.queueApplied={...state.queueDraft};state.queueSkipped.clear();state.queueSelectedId=null;state.queueLimit=40;render();return;}
+        if(action==='queue-reset'){state.queueDraft={batch:'',date:'',type:''};state.queueApplied={...state.queueDraft};state.queueSkipped.clear();state.queueSelectedId=null;state.queueLimit=40;render();return;}
+        if(action==='queue-more'){state.queueLimit+=40;render();return;}
+        if(action==='queue-restart'){state.queueSkipped.clear();state.queueSelectedId=null;render();return;}
+        if(action==='queue-select'){state.queueSelectedId=control.dataset.recordId;render();return;}
+        if(action==='queue-class'){state.queueDraftClass=control.dataset.classId;state.queueError='';render();return;}
+        if(action==='queue-skip'){const rows=queueRows().filter(r=>!state.queueSkipped.has(r.id));const index=rows.findIndex(r=>r.id===state.queueSelectedId);if(index<0)return;state.queueSkipped.add(state.queueSelectedId);queueAdvance(rows,index);render();return;}
+        if(action==='queue-confirm'){const record=recordById.get(state.queueSelectedId),cls=classes.find(c=>c.id===state.queueDraftClass);if(!record)return;if(!cls){state.queueError='请选择确认分类。';render();return;}const rows=queueRows().filter(r=>!state.queueSkipped.has(r.id)),index=rows.findIndex(r=>r.id===record.id);record.reviewHistory.push({beforeId:record.finalClass?.id||null,afterId:cls.id,at:new Date(state.dashboardNow),note:state.queueNote.trim()});record.finalClass=cls;record.status='reviewed';queueAdvance(rows,index);render();showToast('复核已提交，已进入下一条。');return;}
+        if(action==='open-camera'){state.cameraOpen=true;render();return;}
+        if(action==='close-camera'){state.cameraOpen=false;render();return;}
+        if(action==='camera-backdrop'){if(event.target===control){state.cameraOpen=false;render();}return;}
+        if(action==='toggle-pause'){if(state.dashboardInterrupted)return;state.dashboardPaused=!state.dashboardPaused;render();showToast(state.dashboardPaused?'产线已暂停（演示）':'产线已恢复（演示）');return;}
+        if(action==='dashboard-grain'){state.dashboardGrain=control.dataset.grain;render();return;}
+        if(action==='dashboard-record'){state.selectedRecordId=control.dataset.recordId;state.reviewMode=false;render();return;}
+        if(action==='dashboard-filter'){const shift=bucket(state.dashboardNow,'shift');state.recordDraft={id:'',batch:'',start:inputTime(shift.start),end:inputTime(state.dashboardNow),status:control.dataset.status,classification:''};state.recordApplied={...state.recordDraft};state.view='records';state.page=1;location.hash='#page=records';render();return;}
+        if(action==='query'){applyQuery();return;}
+        if(action==='reset'){state.draftStart=defaultStart;state.draftEnd=defaultEnd;state.start=defaultStart;state.end=defaultEnd;state.grain='day';state.batchQuery='';state.appliedBatchQuery='';state.error='';state.page=1;render();return;}
+        if(action==='record-query'){applyRecordQuery();return;}
+        if(action==='record-reset'){state.recordDraft={id:'',batch:'',start:defaultStart,end:defaultEnd,status:'',classification:''};state.recordApplied={...state.recordDraft};state.error='';state.page=1;render();return;}
+        if(action==='view'){state.view=control.dataset.view;state.selectedRecordId=null;state.reviewMode=false;state.cameraOpen=false;state.reportOpenId=null;state.settingsModal=null;state.settingsDraft=null;state.page=1;state.error='';if(typeof location!=='undefined')location.hash=`#page=${state.view}`;render();return;}
+        if(action==='record-detail'){state.selectedRecordId=control.dataset.recordId;state.reviewMode=false;render();return;}
+        if(action==='record-review'){startReview(control.dataset.recordId);return;}
+        if(action==='start-review'){startReview(state.selectedRecordId);return;}
+        if(action==='cancel-review'){state.reviewMode=false;state.reviewError='';render();return;}
+        if(action==='confirm-review'){confirmReview();return;}
+        if(action==='close-detail'){state.selectedRecordId=null;state.reviewMode=false;render();return;}
+        if(action==='detail-backdrop'){if(event.target===control){state.selectedRecordId=null;state.reviewMode=false;render();}return;}
+        if(action==='prev'){state.page=Math.max(1,state.page-1);render();return;}
+        if(action==='next'){state.page++;render();return;}
+        if(action==='batch-query'){state.appliedBatchQuery=state.batchQuery;state.page=1;render();return;}
+        if(action==='export')showToast('演示版暂不生成文件。');
+      });
+      if(typeof window!=='undefined')window.addEventListener('hashchange',()=>{
+        const next=hashView();
+        if(validViews.includes(next)&&next!==state.view){state.view=next;state.selectedRecordId=null;state.reviewMode=false;state.page=1;state.error='';render();}
+      });
+      render();
+      if(typeof window!=='undefined')window.setInterval(dashboardRefresh,10000);
+    })();
   </script>
-  <script src="./assets/palm-fruit-sorting.js"></script>
 </body>
 </html>
